@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.get_cooldown_time = get_cooldown_time;
+exports.get_cd_time = get_cd_time;
 const db_1 = require("../../../db");
-async function get_cooldown_time(guildId) {
+async function get_cd_time(guildId) {
     const results = await db_1.pool.query(`
         SELECT cooldown_time
         FROM server_configurations

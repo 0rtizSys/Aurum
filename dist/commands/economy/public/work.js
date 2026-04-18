@@ -27,30 +27,29 @@ exports.work_command = {
                 .setTitle('✖️ Error')
                 .setDescription('This comand only works on servers, not in DMs etc... 🤖')
                 .setThumbnail(exporter_1.error_icon);
-            await interaction.reply({ embeds: [errEmbed] });
+            await interaction.reply({ embeds: [errEmbed], flags: discord_js_1.MessageFlags.Ephemeral });
             return;
         }
         const ranGains = randomValues(TEMP_MIN, TEMP_MAX);
         const guild_id = interaction.guild.id;
         const user_id = interaction.user.id;
         const isPublic = interaction.options.getBoolean('visibility') ?? false;
-        const cd_time = await (0, get_cd_time_1.get_cooldown_time)(guild_id);
+        const cd_time = await (0, get_cd_time_1.get_cd_time)(guild_id);
         const symbol = await (0, get_eco_symbol_1.get_eco_symbol)(guild_id);
-        const cd = await (0, cd_manager_1.checkCooldown)(guild_id, user_id);
+        const cd = await (0, cd_manager_1.check_cooldown)(guild_id, user_id);
         if (!cd.allowed && cd.remaining != null) {
             const errEmbed = new discord_js_1.EmbedBuilder()
                 .setColor(exporter_1.emb_color)
                 .setThumbnail(exporter_1.error_icon)
                 .setTitle('On Cooldown 🧊')
-                .setDescription(`Wait \`${Math.ceil(cd.remaining / 1000)}\` to work again 🕐!`);
+                .setDescription(`Wait \`${Math.ceil(cd.remaining / 1000)}\` seconds to work again 🕐!`);
             await interaction.reply({ embeds: [errEmbed], flags: discord_js_1.MessageFlags.Ephemeral });
             return;
         }
         await interaction.deferReply({ flags: isPublic ? undefined : discord_js_1.MessageFlags.Ephemeral });
         try {
             await (0, manager_1.add_balance_bw)(user_id, guild_id, TYPE, ranGains);
-            await (0, cd_manager_1.setCooldown)(guild_id, user_id, cd_time * 1000);
-            console.log(cd_time * 1000); //! DEBUG
+            await (0, cd_manager_1.set_cooldown)(guild_id, user_id, cd_time * 1000);
             const embed = new discord_js_1.EmbedBuilder()
                 .setColor(exporter_1.emb_color)
                 .setTitle('💼 Work')

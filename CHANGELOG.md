@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.1.0
+
+- Se agrego `set_cooldown_time` para que los administradores manejes los tiempos de cooldown de el comando `work`
+
+### Patches
+
+- Se agrego ['segundos'] a la alerta de cooldown de el comando `work`
+
+### Cambios
+
+- Renombre `setCooldowm` y `getCooldown` a snake_case
+- Borre `s_stacker.ts` por falta de utilidad
+- Borre `s_manager.ts` por falta de utilidad
+- Borre `console.log()` debuger de `cd_manager.ts` y `work`
+
 ## v1.0.1
 
 - Se corrigió el bug en el comando work donde se mostraban milisegundos en lugar de segundos en el cooldown.

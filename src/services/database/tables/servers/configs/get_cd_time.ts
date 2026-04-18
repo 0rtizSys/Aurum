@@ -1,6 +1,6 @@
 import { pool } from "../../../db";
 
-export async function get_cooldown_time(
+export async function get_cd_time(
     guildId: string,
 ) {
     const results = await pool.query(

@@ -1,6 +1,6 @@
 import { pool } from "../../db";
 
-export async function checkCooldown(
+export async function check_cooldown(
     guildId: string,
     userId: string,
 ): Promise<{ allowed: boolean; remaining?: number }> {
@@ -19,7 +19,6 @@ export async function checkCooldown(
     }
 
     const cooldownEnd = Number(result.rows[0].cooldown);
-    console.log(cooldownEnd - now);
     if(cooldownEnd>now){
         return{
             allowed: false,
@@ -29,7 +28,7 @@ export async function checkCooldown(
     return {allowed:true}
 }
 
-export async function setCooldown(
+export async function set_cooldown(
     guildId: string,
     userId: string,
     durationMs: number
