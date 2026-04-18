@@ -24,16 +24,35 @@ exports.set_cd_time_admin = {
             await interaction.reply({ embeds: [errEmbed], flags: discord_js_1.MessageFlags.Ephemeral });
             return;
         }
+        if (!interaction.memberPermissions.has(discord_js_1.PermissionFlagsBits.Administrator)) {
+            const errEmbed = new discord_js_1.EmbedBuilder()
+                .setColor(exporter_1.emb_color)
+                .setTitle('✖️ Error')
+                .setDescription('You dont have enough perms to do that! 😥')
+                .setThumbnail(exporter_2.error_icon);
+            await interaction.reply({ embeds: [errEmbed], flags: discord_js_1.MessageFlags.Ephemeral });
+            return;
+        }
         const guild_id = interaction.guild.id;
         const newTime = interaction.options.getInteger('time', true);
         const oldTime = await (0, get_cd_time_1.get_cd_time)(guild_id);
+        if (newTime <= 0) {
+            const errEmbed = new discord_js_1.EmbedBuilder()
+                .setColor(exporter_1.emb_color)
+                .setTitle('✖️ Error')
+                .setDescription('Time must be higher than \`0\`')
+                .setThumbnail(exporter_2.error_icon);
+            await interaction.reply({ embeds: [errEmbed], flags: discord_js_1.MessageFlags.Ephemeral });
+            return;
+        }
         await interaction.deferReply();
         try {
             await (0, set_cd_time_1.set_cd_time)(guild_id, newTime);
             const embed = new discord_js_1.EmbedBuilder()
                 .setColor(exporter_1.emb_color)
                 .setTitle('⚙️ Configurations saved')
-                .setDescription(`Old cooldown time: \`${oldTime}s\`\nNew cooldown time: \`${newTime}s\``);
+                .setDescription(`Old cooldown time: \`${oldTime}s\`\nNew cooldown time: \`${newTime}s\``)
+                .setThumbnail(exporter_2.success_icon);
             await interaction.editReply({ embeds: [embed] });
         }
         catch (err) {

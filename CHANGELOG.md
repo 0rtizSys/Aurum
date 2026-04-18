@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.2
+
+- Fixeo de inconcistencias en anchura y altura de thumbails embeds
+- Elimine texto de thumbnails nueva imagen
+
+## v1.1.1
+
+- Se optimizo la validacion de permisos usuario-admin
+- Se agrego `success_icon.png` archivo
+
 ## v1.1.0
 
 - Se agrego `set_cooldown_time` para que los administradores manejes los tiempos de cooldown de el comando `work`

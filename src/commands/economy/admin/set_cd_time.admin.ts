@@ -1,8 +1,8 @@
-import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageFlags } from "discord.js";
+import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction, EmbedBuilder, MessageFlags, PermissionFlagsBits } from "discord.js";
 import { set_cd_time } from "../../../services/database/tables/servers/configs/set_cd_time";
 import { get_cd_time } from "../../../services/database/tables/servers/configs/get_cd_time";
 import { emb_color } from "../../../configs/exporter";
-import { error_icon } from "../../../configs/exporter";
+import { error_icon, success_icon } from "../../../configs/exporter";
 
 export interface Command{
     data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
@@ -28,9 +28,27 @@ export const set_cd_time_admin: Command = {
             await interaction.reply({embeds:[errEmbed], flags: MessageFlags.Ephemeral})
             return;
         }
+        if(!interaction.memberPermissions.has(PermissionFlagsBits.Administrator)){
+            const errEmbed = new EmbedBuilder()
+            .setColor(emb_color)
+            .setTitle('✖️ Error')
+            .setDescription('You dont have enough perms to do that! 😥')
+            .setThumbnail(error_icon);
+            await interaction.reply({embeds:[errEmbed], flags: MessageFlags.Ephemeral})
+            return;
+        }
         const guild_id = interaction.guild!.id;
         const newTime = interaction.options.getInteger('time', true);
         const oldTime = await get_cd_time(guild_id);
+        if(newTime<=0){
+            const errEmbed = new EmbedBuilder()
+            .setColor(emb_color)
+            .setTitle('✖️ Error')
+            .setDescription('Time must be higher than \`0\`')
+            .setThumbnail(error_icon)
+            await interaction.reply({embeds:[errEmbed], flags: MessageFlags.Ephemeral})
+            return;
+        }
         await interaction.deferReply();
         try{
             await set_cd_time(guild_id, newTime);
@@ -38,6 +56,7 @@ export const set_cd_time_admin: Command = {
             .setColor(emb_color)
             .setTitle('⚙️ Configurations saved')
             .setDescription(`Old cooldown time: \`${oldTime}s\`\nNew cooldown time: \`${newTime}s\``)
+            .setThumbnail(success_icon)
             await interaction.editReply({embeds:[embed]})
         }catch(err){
             const errEmbed = new EmbedBuilder()
