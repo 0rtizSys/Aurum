@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.0
+
+- Se agrego `set_economy_symbol` para que los administradores cambien el icono de economia
+
+## Cambios
+
+- Refactorizacion de nombres de funciones, types,
+
 ## v1.1.2
 
 - Fixeo de inconcistencias en anchura y altura de thumbails embeds
