@@ -1,4 +1,16 @@
 # Changelog
+
+## v1.3.0
+- Added `bank_balance` for members to view their bank balance
+
+## Changes
+- Changed param names in `manager.ts`
+- Changed variable `visible` to `isPublic` in `wallet.ts`
+- Removed unused `const result =` in `set_cd_time.ts` and `set_eco_symbol.ts`
+
+## Know bugs
+- `bank.ts` isnt syncing correctly somehow
+
 ## v1.2.0
 - Added `set_economy_symbol` so admins can change the economy icon
 
@@ -51,4 +63,4 @@
 - Added internal slash command sync to make testing and deploys easier
 
 ## Status
-The economy foundation is up and running, but some things are still half-baked — internal support for settings and bank exists, though not everything has user-facing commands yet.
+The economy foundation is up and running, but some things are still half-baked — internal support for settings and bank exists, though not everything has user-facing commands ye

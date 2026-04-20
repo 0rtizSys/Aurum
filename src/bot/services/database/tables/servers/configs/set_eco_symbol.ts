@@ -2,7 +2,7 @@ import { pool } from "../../../db";
 
 export async function setEcoSymbol(guildId: string, symbol: string) {
   try {
-    const result = await pool.query(
+    await pool.query(
       `
             INSERT INTO server_configurations (guild_id, economy_symbol)
             VALUES ($1, $2)

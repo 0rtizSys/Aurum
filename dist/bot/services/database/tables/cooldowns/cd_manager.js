@@ -8,7 +8,6 @@ async function checkCooldown(guildId, userId) {
         FROM cooldowns_table
         WHERE guild_id = $1 AND user_id = $2`, [guildId, userId]);
     const now = Date.now();
-    console.log(now);
     if (result.rowCount === 0) {
         return { allowed: true };
     }

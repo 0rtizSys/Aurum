@@ -12,7 +12,6 @@ export async function checkCooldown(
   );
 
   const now = Date.now();
-  console.log(now);
 
   if (result.rowCount === 0) {
     return { allowed: true };

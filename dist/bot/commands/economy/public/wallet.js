@@ -17,17 +17,17 @@ exports.getWalletBalance = {
     async execute(interaction) {
         if (!(await (0, require_guild_1.requireGuild)(interaction)))
             return;
-        const visible = interaction.options.getBoolean("visibility", true);
+        const isPublic = interaction.options.getBoolean("visibility", true);
         const userId = interaction.user.id;
         const guildId = interaction.guild.id;
-        await interaction.deferReply({ flags: !visible ? discord_js_1.MessageFlags.Ephemeral : undefined }); //^ Here we defer the message
+        await interaction.deferReply({ flags: !isPublic ? discord_js_1.MessageFlags.Ephemeral : undefined }); //^ Here we defer the message
         try {
             const symbol = await (0, get_eco_symbol_1.getEcoSymbol)(guildId);
             const userBal = await (0, manager_1.getBalanceBW)(userId, guildId);
             await (0, simplified_embed_builder_1.sendSimpleEmbed)(interaction, {
                 title: "Wallet Balance 💵",
-                description: `<@${userId}> Your current balance is \`${symbol}${userBal}\``,
-                eph: !visible,
+                description: `${interaction.user} Your current balance is \`${symbol}${userBal}\``,
+                eph: !isPublic,
             });
         }
         catch (e) {

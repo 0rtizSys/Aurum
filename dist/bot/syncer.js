@@ -14,6 +14,7 @@ const sync_slash_js_1 = require("./commands/developer/sync_slash.js");
 // * =========================
 const wallet_js_1 = require("./commands/economy/public/wallet.js");
 const work_js_1 = require("./commands/economy/public/work.js");
+const bank_js_1 = require("./commands/economy/public/bank.js");
 // * =========================
 // * Economy - Moderators
 // * =========================
@@ -34,6 +35,7 @@ exports.cmds = [
     // * Economy - Public
     wallet_js_1.getWalletBalance,
     work_js_1.workCommand,
+    bank_js_1.getBankBalance,
     // * Economy - Moderators
     add_balance_js_1.addBalance,
     // * Economy - Admin

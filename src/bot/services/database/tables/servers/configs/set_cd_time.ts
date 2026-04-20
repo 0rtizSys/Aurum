@@ -2,7 +2,7 @@ import { pool } from "../../../db";
 
 export async function setCdTime(guildId: string, seconds: number) {
   try {
-    const results = await pool.query(
+    await pool.query(
       `
             INSERT INTO server_configurations (guild_id, cooldown_time)
             VALUES ($1, $2)
@@ -12,7 +12,6 @@ export async function setCdTime(guildId: string, seconds: number) {
       [guildId, seconds],
     );
   } catch (err) {
-    return false;
-    console.error("Error de base de datos\narchivo: set_cd_time.ts");
+    console.error(`Error de base de datos\narchivo: set_cd_time.ts\n${err}`);
   }
 }

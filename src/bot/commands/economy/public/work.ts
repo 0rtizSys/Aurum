@@ -1,23 +1,23 @@
-import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction }
-from "discord.js";
+import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction, MessageFlags }
+  from "discord.js";
 
-import {checkCooldown,setCooldown,}
-from "../../../services/database/tables/cooldowns/cd_manager";
+import { checkCooldown, setCooldown, }
+  from "../../../services/database/tables/cooldowns/cd_manager";
 
 import { addBalanceBW }
-from "../../../services/database/tables/clients/manager";
+  from "../../../services/database/tables/clients/manager";
 
 import { getCdTime }
-from "../../../services/database/tables/servers/configs/get_cd_time";
+  from "../../../services/database/tables/servers/configs/get_cd_time";
 
 import { getEcoSymbol }
-from "../../../services/database/tables/servers/configs/get_eco_symbol";
+  from "../../../services/database/tables/servers/configs/get_eco_symbol";
 
 import { requireGuild }
-from "../../../Helpers/require_guild";
+  from "../../../Helpers/require_guild";
 
 import { sendSimpleEmbed, internalErrorEmbed }
-from "../../../Helpers/simplified_embed_builder";
+  from "../../../Helpers/simplified_embed_builder";
 
 const TEMP_MIN: number = 100;
 const TEMP_MAX: number = 1000;
@@ -36,7 +36,8 @@ export const workCommand: Command = {
     .setName("work")
     .setDescription("Work to generate money")
     .addBooleanOption((opt) =>
-      opt.setName("visibility").setDescription("People can see your earnings"),
+      opt
+        .setName("visibility").setDescription("People can see your earnings"),
     ),
 
   async execute(interaction: ChatInputCommandInteraction) {
@@ -52,19 +53,20 @@ export const workCommand: Command = {
       await sendSimpleEmbed(interaction, {
         title: "On Cooldown 🧊",
         description: `Wait \`${Math.ceil(cd.remaining / 1000)}\` seconds to work again 🕐!`,
-        thumType:'error',
+        thumType: 'error',
       });
       return;
     }
     await interaction.deferReply({
-      flags: isPublic ? undefined : 64,
+      flags: !isPublic ? MessageFlags.Ephemeral : undefined,
     });
     try {
       await addBalanceBW(userId, guildId, "wallet", ranGains);
       await setCooldown(guildId, userId, cdTime * 1000);
-      await sendSimpleEmbed(interaction,{
-        title:'💼 Work',
-        description:`${interaction.user} earned \`${symbol}${ranGains}\` 💵`
+      await sendSimpleEmbed(interaction, {
+        title: '💼 Work',
+        description: `${interaction.user} earned \`${symbol}${ranGains}\` 💵`,
+        eph: !isPublic
       })
     } catch (e) {
       console.error(e);

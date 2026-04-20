@@ -3,28 +3,28 @@ import { pool } from "../../db";
 //^ Get Balance Wallet Function
 
 export async function getBalanceBW(
-  ui: string,
-  gi: string,
+  userId: string,
+  guildId: string,
 ): Promise<number> {
   let result = await pool.query(
     `SELECT wallet
         FROM clients
         WHERE user_id = $1 AND guild_id = $2`,
-    [ui, gi],
+    [userId, guildId],
   );
 
   if (result.rowCount === 0) {
     await pool.query(
       `INSERT INTO clients (user_id, guild_id, wallet)
             VALUES ($1, $2, 0)`,
-      [ui, gi],
+      [userId, guildId],
     );
 
     result = await pool.query(
       `SELECT wallet
             FROM clients
             WHERE user_id = $1 AND guild_id = $2`,
-      [ui, gi],
+      [userId, guildId],
     );
   }
   return result.rows[0].wallet;
@@ -33,8 +33,8 @@ export async function getBalanceBW(
 //^ Add Balance ( Prototype )
 
 export async function addBalanceBW(
-  ui: string,
-  gi: string,
+  userId: string,
+  guildId: string,
   type: string,
   amn: number,
 ) {
@@ -44,7 +44,7 @@ export async function addBalanceBW(
             VALUES ($1,$2,$3)
             ON CONFLICT (user_id, guild_id)
             DO UPDATE SET wallet = clients.wallet + $3`,
-      [ui, gi, amn],
+      [userId, guildId, amn],
     );
   } else if (type === "bank") {
     await pool.query(
@@ -52,7 +52,7 @@ export async function addBalanceBW(
             VALUES ($1,$2,$3)
             ON CONFLICT (user_id, guild_id)
             DO UPDATE SET bank = clients.bank + $3`,
-      [ui, gi, amn],
+      [userId, guildId, amn],
     );
   }
 }

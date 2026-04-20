@@ -29,7 +29,9 @@ It is designed around a simple server-based economy: users can work for money, c
 
 - `/wallet_balance`
   - Shows the user's current wallet balance.
-  - Requires the `visibility` option.
+
+- `/bank_balance`
+  - Shows the user's current bank balance.
 
 ### Moderator / Admin Commands
 

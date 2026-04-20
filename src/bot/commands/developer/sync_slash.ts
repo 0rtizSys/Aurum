@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import { cmds } from "../../syncer";
 import * as dotenv from "dotenv";
+import { notEnoughPermsEmbed } from "../../Helpers/simplified_embed_builder";
 dotenv.config();
 
 export interface Command {
@@ -32,10 +33,7 @@ export const syncSlash: Command = {
 
   async execute(interaction: ChatInputCommandInteraction) {
     if (interaction.user.id !== process.env.OWNER_ID) {
-      await interaction.reply({
-        content: "❌ Not enough perms",
-        flags: 64, // ephemeral
-      });
+      await notEnoughPermsEmbed(interaction);
       return;
     }
 
@@ -50,9 +48,9 @@ export const syncSlash: Command = {
       scope === "global"
         ? Routes.applicationCommands(process.env.CLIENT_ID!)
         : Routes.applicationGuildCommands(
-            process.env.CLIENT_ID!,
-            process.env.GUILD_ID!,
-          ),
+          process.env.CLIENT_ID!,
+          process.env.GUILD_ID!,
+        ),
       {
         body: cmds.map((cmd) => cmd.data?.toJSON()),
       },

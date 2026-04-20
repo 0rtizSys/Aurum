@@ -16,6 +16,7 @@ import { syncSlash } from "./commands/developer/sync_slash.js";
 
 import { getWalletBalance } from "./commands/economy/public/wallet.js";
 import { workCommand } from "./commands/economy/public/work.js";
+import { getBankBalance } from "./commands/economy/public/bank.js";
 
 // * =========================
 // * Economy - Moderators
@@ -44,6 +45,7 @@ export const cmds = [
   // * Economy - Public
   getWalletBalance,
   workCommand,
+  getBankBalance,
 
   // * Economy - Moderators
   addBalance,

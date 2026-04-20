@@ -37,6 +37,7 @@ exports.syncSlash = void 0;
 const discord_js_1 = require("discord.js");
 const syncer_1 = require("../../syncer");
 const dotenv = __importStar(require("dotenv"));
+const simplified_embed_builder_1 = require("../../Helpers/simplified_embed_builder");
 dotenv.config();
 exports.syncSlash = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -49,10 +50,7 @@ exports.syncSlash = {
         .addChoices({ name: "Global", value: "global" }, { name: "Test", value: "test" })),
     async execute(interaction) {
         if (interaction.user.id !== process.env.OWNER_ID) {
-            await interaction.reply({
-                content: "❌ Not enough perms",
-                flags: 64, // ephemeral
-            });
+            await (0, simplified_embed_builder_1.notEnoughPermsEmbed)(interaction);
             return;
         }
         const scope = interaction.options.getString("scope", true);

@@ -4,7 +4,7 @@ exports.setEcoSymbol = setEcoSymbol;
 const db_1 = require("../../../db");
 async function setEcoSymbol(guildId, symbol) {
     try {
-        const result = await db_1.pool.query(`
+        await db_1.pool.query(`
             INSERT INTO server_configurations (guild_id, economy_symbol)
             VALUES ($1, $2)
             ON CONFLICT(guild_id)

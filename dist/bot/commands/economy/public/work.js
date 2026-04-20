@@ -17,7 +17,8 @@ exports.workCommand = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("work")
         .setDescription("Work to generate money")
-        .addBooleanOption((opt) => opt.setName("visibility").setDescription("People can see your earnings")),
+        .addBooleanOption((opt) => opt
+        .setName("visibility").setDescription("People can see your earnings")),
     async execute(interaction) {
         if (!(0, require_guild_1.requireGuild)(interaction))
             return;
@@ -37,14 +38,15 @@ exports.workCommand = {
             return;
         }
         await interaction.deferReply({
-            flags: isPublic ? undefined : 64,
+            flags: !isPublic ? discord_js_1.MessageFlags.Ephemeral : undefined,
         });
         try {
             await (0, manager_1.addBalanceBW)(userId, guildId, "wallet", ranGains);
             await (0, cd_manager_1.setCooldown)(guildId, userId, cdTime * 1000);
             await (0, simplified_embed_builder_1.sendSimpleEmbed)(interaction, {
                 title: '💼 Work',
-                description: `${interaction.user} earned \`${symbol}${ranGains}\` 💵`
+                description: `${interaction.user} earned \`${symbol}${ranGains}\` 💵`,
+                eph: !isPublic
             });
         }
         catch (e) {
