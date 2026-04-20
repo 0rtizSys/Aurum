@@ -39,7 +39,9 @@ export const getWalletBalance: Command = {
       const userBal = await getBalanceBW(userId, guildId, "wallet");
       await sendSimpleEmbed(interaction, {
         title: "Wallet Balance 💵",
-        description: `${interaction.user} Your current balance is \`${symbol}${userBal}\``,
+        description: isPublic
+          ? `Your current balance is \`${symbol}${userBal}\``
+          : `${interaction.user} Your current balance is \`${symbol}${userBal}\``,
         eph: !isPublic,
       });
     } catch (e) {

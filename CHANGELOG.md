@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.3] - 2026-04-20
+- Improved `wallet.ts` User Interface 
+
+## Changes
+- Updated all `tables/servers/` elements dependency paths
+
+## [1.5.2] - 2026-04-20
+- Added `bank` & `wallet` support in `clients/manager.ts` functions
+- Moved elements of `servers/configs` to `servers/` and updated elements path
+
 ## [1.5.1] - 2026-04-20
 
 ### 🔧 Fixes & Refactors

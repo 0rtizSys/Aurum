@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setCdTimeAdmin = void 0;
 const discord_js_1 = require("discord.js");
-const set_cd_time_1 = require("../../../services/database/tables/servers/configs/set_cd_time");
-const get_cd_time_1 = require("../../../services/database/tables/servers/configs/get_cd_time");
+const set_cd_time_1 = require("../../../services/database/tables/servers/set_cd_time");
+const get_cd_time_1 = require("../../../services/database/tables/servers/get_cd_time");
 const simplified_embed_builder_1 = require("../../../Helpers/simplified_embed_builder");
 const require_guild_1 = require("../../../Helpers/require_guild");
 exports.setCdTimeAdmin = {

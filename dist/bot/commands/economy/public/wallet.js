@@ -4,7 +4,7 @@ exports.getWalletBalance = void 0;
 const discord_js_1 = require("discord.js");
 const manager_1 = require("../../../services/database/tables/clients/manager");
 const simplified_embed_builder_1 = require("../../../Helpers/simplified_embed_builder");
-const get_eco_symbol_1 = require("../../../services/database/tables/servers/configs/get_eco_symbol");
+const get_eco_symbol_1 = require("../../../services/database/tables/servers/get_eco_symbol");
 const require_guild_1 = require("../../../Helpers/require_guild");
 exports.getWalletBalance = {
     data: new discord_js_1.SlashCommandBuilder()
@@ -26,7 +26,9 @@ exports.getWalletBalance = {
             const userBal = await (0, manager_1.getBalanceBW)(userId, guildId, "wallet");
             await (0, simplified_embed_builder_1.sendSimpleEmbed)(interaction, {
                 title: "Wallet Balance 💵",
-                description: `${interaction.user} Your current balance is \`${symbol}${userBal}\``,
+                description: isPublic
+                    ? `Your current balance is \`${symbol}${userBal}\``
+                    : `${interaction.user} Your current balance is \`${symbol}${userBal}\``,
                 eph: !isPublic,
             });
         }

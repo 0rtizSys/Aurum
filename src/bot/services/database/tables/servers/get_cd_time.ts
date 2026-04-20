@@ -1,4 +1,4 @@
-import { pool } from "../../../db";
+import { pool } from "../../db";
 
 export async function getCdTime(guildId: string) {
   const results = await pool.query(

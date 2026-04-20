@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.setEconomySymbolAdmin = void 0;
 const discord_js_1 = require("discord.js");
 const require_guild_1 = require("../../../Helpers/require_guild");
-const get_eco_symbol_1 = require("../../../services/database/tables/servers/configs/get_eco_symbol");
+const get_eco_symbol_1 = require("../../../services/database/tables/servers/get_eco_symbol");
 const simplified_embed_builder_1 = require("../../../Helpers/simplified_embed_builder");
-const set_eco_symbol_1 = require("../../../services/database/tables/servers/configs/set_eco_symbol");
+const set_eco_symbol_1 = require("../../../services/database/tables/servers/set_eco_symbol");
 exports.setEconomySymbolAdmin = {
     data: new discord_js_1.SlashCommandBuilder()
         .setName("set_economy_symbol")
