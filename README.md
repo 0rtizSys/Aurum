@@ -1,32 +1,222 @@
 # Aurum
 
-Aurum es un bot de economia para Discord pensado para servidores que quieren una base simple: trabajar, ver saldo y administrar dinero sin comandos complicados.
+Aurum is a Discord economy bot built with TypeScript, `discord.js`, and PostgreSQL.
+It is designed around a simple server-based economy: users can work for money, check their wallet, and administrators can manage balances and server economy settings.
 
-## Que puede hacer hoy
+## Current Features
 
-- `/work`: te deja ganar dinero aleatorio cada vez que el tiempo de espera lo permita.
-- `/wallet_balance`: muestra el dinero que tienes en tu cartera.
-- `/add_balance`: permite a administradores dar saldo a un usuario.
-- `/ping`: sirve para comprobar si el bot esta respondiendo.
+- Slash-command based interaction flow.
+- Per-server economy data.
+- Persistent wallet and bank balances stored in PostgreSQL.
+- Per-user cooldown system for the `/work` command.
+- Server configuration for:
+  - economy symbol
+  - work cooldown time
+- Shared embed helpers for consistent bot responses.
+- Internal slash command sync command for development and deployment.
 
-## Como se usa
+## Commands
 
-- Todos los comandos funcionan con slash commands.
-- Algunas respuestas pueden enviarse en privado para no llenar el chat.
-- El saldo se guarda por servidor, asi que cada comunidad puede tener su propia economia.
+### Public Commands
 
-## Bugs conocidos
+- `/ping`
+  - Shows bot latency and API latency.
 
-- El tiempo de espera de `/work` puede verse como un numero poco claro en vez de mostrarse como segundos o minutos.
-- El banco ya puede recibir saldo por administracion, pero todavia no hay un comando publico para revisar ese dinero.
-- La configuracion del cooldown ya existe por dentro, pero aun no tiene un comando visible para cambiarla desde Discord.
+- `/work`
+  - Grants a random wallet reward between `100` and `1000`.
+  - Uses a per-user cooldown stored in the database.
+  - Optional `visibility` boolean controls whether the response is public or ephemeral.
 
-## En desarrollo
+- `/wallet_balance`
+  - Shows the user's current wallet balance.
+  - Requires the `visibility` option.
 
-- Ajustar el cooldown de trabajo desde un comando para administradores.
-- Personalizar el simbolo de la economia por servidor.
-- Completar la parte de banco con mas comandos para usuarios.
+### Moderator / Admin Commands
 
-## Resumen rapido
+- `/add_balance`
+  - Adds money to either a user's `wallet` or `bank`.
+  - Options:
+    - `method`: `wallet` or `bank`
+    - `amount`
+    - `user`
+    - `visibility`
+  - Intended for server administrators.
 
-Aurum ya sirve como base de economia para empezar a usarlo en un servidor, pero todavia esta en una etapa temprana y varias funciones ya preparadas por dentro aun no estan expuestas como comandos para el usuario final.
+- `/set_cooldown_time`
+  - Changes the cooldown time used by `/work`.
+  - Value is set in seconds.
+  - Intended for server administrators.
+
+- `/set_economy_symbol`
+  - Changes the economy symbol used in that server.
+  - Symbol length is limited to 1 or 2 characters.
+
+### Developer Command
+
+- `/sync_slash`
+  - Syncs slash commands globally or to the configured test guild.
+  - Restricted to `OWNER_ID`.
+  - Uses:
+    - `CLIENT_ID`
+    - `GUILD_ID`
+    - `TOKEN`
+
+## Environment Variables
+
+The project expects these environment variables in `.env`:
+
+```env
+TOKEN=
+OWNER_ID=
+CLIENT_ID=
+GUILD_ID=
+
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+```
+
+## Database Expectations
+
+The bot connects to PostgreSQL through `pg` and expects the following tables to already exist:
+
+### `clients`
+
+Used to store user balances per guild.
+
+Expected columns:
+
+- `user_id`
+- `guild_id`
+- `wallet`
+- `bank`
+
+Expected constraint:
+
+- unique or primary key on `(user_id, guild_id)`
+
+### `cooldowns_table`
+
+Used to store work cooldown expiration timestamps.
+
+Expected columns:
+
+- `guild_id`
+- `user_id`
+- `cooldown`
+
+Expected constraint:
+
+- unique or primary key on `(guild_id, user_id)`
+
+### `server_configurations`
+
+Used to store per-server economy settings.
+
+Expected columns:
+
+- `guild_id`
+- `cooldown_time`
+- `economy_symbol`
+
+Expected constraint:
+
+- unique or primary key on `guild_id`
+
+## Project Structure
+
+```text
+src/
+  bot/
+    commands/
+      developer/
+      economy/
+        admin/
+        moderators/
+        public/
+      utils/
+    configs/
+    Helpers/
+    services/
+      database/
+        tables/
+    index.ts
+    syncer.ts
+```
+
+### Structure Notes
+
+- `index.ts` boots the Discord client and routes interactions.
+- `syncer.ts` works as the command registry.
+- `commands/` contains slash command definitions and interaction handlers.
+- `services/database/` contains PostgreSQL access logic.
+- `Helpers/` contains reusable interaction utilities.
+- `configs/` contains embed-related configuration.
+
+## How It Works
+
+- The bot loads environment variables with `dotenv`.
+- It initializes a Discord client in `src/bot/index.ts`.
+- Every slash command is registered in `src/bot/syncer.ts`.
+- On interaction:
+  - the bot looks up the command by name
+  - executes the matching handler
+  - falls back to a generic error response if execution fails
+
+Economy behavior is scoped by guild:
+
+- balances are stored per user and per guild
+- cooldowns are stored per user and per guild
+- economy symbol and cooldown time are stored per guild
+
+## Scripts
+
+Current `package.json` scripts:
+
+```json
+{
+  "dev": "tsc --watch",
+  "compile": "tsc && node dist/"
+}
+```
+
+Notes:
+
+- `dev` currently watches TypeScript compilation only.
+- `compile` compiles the project and then tries to run `dist/`.
+- If you want a smoother local workflow, this area is a good candidate for improvement.
+
+## Tech Stack
+
+- TypeScript
+- Node.js
+- discord.js v14
+- PostgreSQL
+- dotenv
+- Prettier
+
+## Current Limitations
+
+- No migration or schema bootstrap files are included.
+- No automated test suite is present.
+- The README previously under-documented setup and database expectations.
+- Some command validations and permission checks could still be tightened in code.
+- The bank balance can be modified through admin commands, but there is no public command yet to view bank balance.
+
+## Changelog
+
+Recent documented additions include:
+
+- configurable economy symbol
+- configurable work cooldown
+- embed and cooldown fixes
+- command and naming refactors
+
+See [CHANGELOG.md](./CHANGELOG.md) for the full history.
+
+## Summary
+
+Aurum is already a functional foundation for a Discord economy bot with per-server configuration and persistent balances.
+It is still an early-stage project, but the current codebase already supports a practical economy loop, admin controls, and a database-backed command system that can be extended further.
