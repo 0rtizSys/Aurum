@@ -8,10 +8,10 @@ import { addBalanceBW }
   from "../../../services/database/tables/clients/manager";
 
 import { getCdTime }
-  from "../../../services/database/tables/servers/configs/get_cd_time";
+  from "../../../services/database/tables/servers/get_cd_time";
 
 import { getEcoSymbol }
-  from "../../../services/database/tables/servers/configs/get_eco_symbol";
+  from "../../../services/database/tables/servers/get_eco_symbol";
 
 import { requireGuild }
   from "../../../Helpers/require_guild";

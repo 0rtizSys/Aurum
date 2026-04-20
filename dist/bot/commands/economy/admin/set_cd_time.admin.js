@@ -44,6 +44,7 @@ exports.setCdTimeAdmin = {
             });
         }
         catch (err) {
+            console.log(err);
             await (0, simplified_embed_builder_1.internalErrorEmbed)(interaction);
         }
     },

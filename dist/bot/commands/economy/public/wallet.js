@@ -23,7 +23,7 @@ exports.getWalletBalance = {
         await interaction.deferReply({ flags: !isPublic ? discord_js_1.MessageFlags.Ephemeral : undefined }); //^ Here we defer the message
         try {
             const symbol = await (0, get_eco_symbol_1.getEcoSymbol)(guildId);
-            const userBal = await (0, manager_1.getBalanceBW)(userId, guildId);
+            const userBal = await (0, manager_1.getBalanceBW)(userId, guildId, "wallet");
             await (0, simplified_embed_builder_1.sendSimpleEmbed)(interaction, {
                 title: "Wallet Balance 💵",
                 description: `${interaction.user} Your current balance is \`${symbol}${userBal}\``,

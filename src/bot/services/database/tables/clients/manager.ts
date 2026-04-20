@@ -1,3 +1,4 @@
+
 import { pool } from "../../db";
 
 //^ Get Balance Wallet Function
@@ -5,29 +6,23 @@ import { pool } from "../../db";
 export async function getBalanceBW(
   userId: string,
   guildId: string,
-): Promise<number> {
-  let result = await pool.query(
-    `SELECT wallet
-        FROM clients
-        WHERE user_id = $1 AND guild_id = $2`,
-    [userId, guildId],
-  );
+  Type: "wallet" | "bank"
+) {
+  /**
+   * Optimized balance getter function which allows wallet and bank 
+   * parameters of the cog options
+  */
+  await pool.query(
+    `
+    INSERT INTO clients (user_id, guild_id, wallet, bank)
+    VALUES ($1, $2, 0, 0)
+    ON CONFLICT (user_id, guild_id) DO NOTHING
+    `, [userId, guildId]
+  )
 
-  if (result.rowCount === 0) {
-    await pool.query(
-      `INSERT INTO clients (user_id, guild_id, wallet)
-            VALUES ($1, $2, 0)`,
-      [userId, guildId],
-    );
-
-    result = await pool.query(
-      `SELECT wallet
-            FROM clients
-            WHERE user_id = $1 AND guild_id = $2`,
-      [userId, guildId],
-    );
-  }
-  return result.rows[0].wallet;
+  const query = `SELECT ${Type} FROM clients WHERE guild_id=$1 AND user_id=$2`
+  const balanceResult = await pool.query(query, [guildId, userId])
+  return balanceResult.rows[0][Type];
 }
 
 //^ Add Balance ( Prototype )
@@ -35,24 +30,18 @@ export async function getBalanceBW(
 export async function addBalanceBW(
   userId: string,
   guildId: string,
-  type: string,
+  Type: "wallet" | "bank",
   amn: number,
 ) {
-  if (type === "wallet") {
-    await pool.query(
-      `INSERT INTO clients (user_id, guild_id, wallet)
-            VALUES ($1,$2,$3)
-            ON CONFLICT (user_id, guild_id)
-            DO UPDATE SET wallet = clients.wallet + $3`,
-      [userId, guildId, amn],
-    );
-  } else if (type === "bank") {
-    await pool.query(
-      `INSERT INTO clients (user_id, guild_id, bank)
-            VALUES ($1,$2,$3)
-            ON CONFLICT (user_id, guild_id)
-            DO UPDATE SET bank = clients.bank + $3`,
-      [userId, guildId, amn],
-    );
-  }
+  if (!["wallet", "bank"].includes(Type)) throw new Error("Invalid balance type")
+  const query =
+    `
+  INSERT INTO clients (user_id, guild_id, ${Type})
+  VALUES ($1, $2, $3)
+  ON CONFLICT (user_id, guild_id)
+  DO UPDATE SET ${Type} = clients.${Type} + $3
+  RETURNING ${Type};
+  `
+  const result = await pool.query(query, [userId, guildId, amn]);
+  return result.rows[0][Type];
 }

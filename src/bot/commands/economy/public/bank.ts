@@ -14,7 +14,7 @@ import { Command }
   from "../../types";
 
 import { getEcoSymbol }
-  from "../../../services/database/tables/servers/configs/get_eco_symbol";
+  from "../../../services/database/tables/servers/get_eco_symbol";
 
 export const getBankBalance: Command = {
   data: new SlashCommandBuilder()
@@ -34,7 +34,7 @@ export const getBankBalance: Command = {
     const symbol = await getEcoSymbol(guildId);
     await interaction.deferReply({ flags: !isPublic ? MessageFlags.Ephemeral : undefined });
     try {
-      const userBal = await getBalanceBW(userId, guildId);
+      const userBal = await getBalanceBW(userId, guildId, "bank");
       await sendSimpleEmbed(interaction, {
         title: "Bank balance 💳",
         description: isPublic

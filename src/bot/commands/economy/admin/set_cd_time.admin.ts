@@ -2,10 +2,10 @@ import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandIn
   from "discord.js";
 
 import { setCdTime }
-  from "../../../services/database/tables/servers/configs/set_cd_time";
+  from "../../../services/database/tables/servers/set_cd_time";
 
 import { getCdTime }
-  from "../../../services/database/tables/servers/configs/get_cd_time";
+  from "../../../services/database/tables/servers/get_cd_time";
 
 import { sendSimpleEmbed, internalErrorEmbed, notEnoughPermsEmbed }
   from "../../../Helpers/simplified_embed_builder";

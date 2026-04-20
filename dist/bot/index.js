@@ -44,7 +44,7 @@ const client = new discord_js_1.Client({
         discord_js_1.GatewayIntentBits.MessageContent,
     ],
 });
-client.once(discord_js_1.Events.ClientReady, async () => {
+client.once(discord_js_1.Events.ClientReady, () => {
     console.log(`Bot listo como ${client.user?.tag}`);
     client.user?.setPresence({
         activities: [

@@ -7,7 +7,7 @@ import { internalErrorEmbed, sendSimpleEmbed }
   from "../../../Helpers/simplified_embed_builder";
 
 import { getEcoSymbol }
-  from "../../../services/database/tables/servers/configs/get_eco_symbol";
+  from "../../../services/database/tables/servers/get_eco_symbol";
 
 import { requireGuild }
   from "../../../Helpers/require_guild";
@@ -36,7 +36,7 @@ export const getWalletBalance: Command = {
     await interaction.deferReply({ flags: !isPublic ? MessageFlags.Ephemeral : undefined }); //^ Here we defer the message
     try {
       const symbol = await getEcoSymbol(guildId);
-      const userBal = await getBalanceBW(userId, guildId);
+      const userBal = await getBalanceBW(userId, guildId, "wallet");
       await sendSimpleEmbed(interaction, {
         title: "Wallet Balance 💵",
         description: `${interaction.user} Your current balance is \`${symbol}${userBal}\``,

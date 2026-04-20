@@ -2,20 +2,20 @@ import {
   SlashCommandBuilder,
   SlashCommandOptionsOnlyBuilder,
   ChatInputCommandInteraction,
-} 
-from "discord.js";
+}
+  from "discord.js";
 
 import { requireGuild }
-from "../../../Helpers/require_guild";
+  from "../../../Helpers/require_guild";
 
-import { getEcoSymbol } 
-from "../../../services/database/tables/servers/configs/get_eco_symbol";
+import { getEcoSymbol }
+  from "../../../services/database/tables/servers/get_eco_symbol";
 
 import { sendSimpleEmbed, internalErrorEmbed }
-from "../../../Helpers/simplified_embed_builder";
+  from "../../../Helpers/simplified_embed_builder";
 
-import { setEcoSymbol } 
-from "../../../services/database/tables/servers/configs/set_eco_symbol";
+import { setEcoSymbol }
+  from "../../../services/database/tables/servers/set_eco_symbol";
 
 export interface Command {
   data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
