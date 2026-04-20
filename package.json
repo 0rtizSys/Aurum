@@ -7,7 +7,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsc --watch",
-    "compile": "tsc && node dist/"
+    "compile": "npx tsc && node dist/bot/index.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

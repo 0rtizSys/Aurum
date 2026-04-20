@@ -1,17 +1,17 @@
 import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction, PermissionFlagsBits }
-from "discord.js";
+  from "discord.js";
 
 import { setCdTime }
-from "../../../services/database/tables/servers/configs/set_cd_time";
+  from "../../../services/database/tables/servers/configs/set_cd_time";
 
 import { getCdTime }
-from "../../../services/database/tables/servers/configs/get_cd_time";
+  from "../../../services/database/tables/servers/configs/get_cd_time";
 
 import { sendSimpleEmbed, internalErrorEmbed, notEnoughPermsEmbed }
-from "../../../Helpers/simplified_embed_builder";
+  from "../../../Helpers/simplified_embed_builder";
 
 import { requireGuild }
-from "../../../Helpers/require_guild";
+  from "../../../Helpers/require_guild";
 
 export interface Command {
   data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
@@ -29,29 +29,30 @@ export const setCdTimeAdmin: Command = {
         .setRequired(true),
     ),
   async execute(interaction: ChatInputCommandInteraction) {
-    if(!(await requireGuild(interaction))){};
-    if(!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)){await notEnoughPermsEmbed(interaction); return;};
+    if (!(await requireGuild(interaction))) { };
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) { await notEnoughPermsEmbed(interaction); return; };
     const guildId = interaction.guild!.id;
     const newTime = interaction.options.getInteger("time", true);
     const oldTime = await getCdTime(guildId);
     if (newTime <= 0) {
-      await sendSimpleEmbed(interaction,{
-        title:'✖️ Error',
-        description:'Time must be higher than \`0\`',
-        thumType:'error',
-        eph:true
+      await sendSimpleEmbed(interaction, {
+        title: '✖️ Error',
+        description: 'Time must be higher than \`0\`',
+        thumType: 'error',
+        eph: true
       });
       return;
     }
     await interaction.deferReply();
     try {
       await setCdTime(guildId, newTime);
-      await sendSimpleEmbed(interaction,{
-        title:'⚙️ Configurations saved',
-        description:`Old cooldown time: \`${oldTime}s\`\nNew cooldown time: \`${newTime}s\``,
-        thumType:'success'
-      }) 
+      await sendSimpleEmbed(interaction, {
+        title: '⚙️ Configurations saved',
+        description: `Old cooldown time: \`${oldTime}s\`\nNew cooldown time: \`${newTime}s\``,
+        thumType: 'success'
+      })
     } catch (err) {
+      console.log(err)
       await internalErrorEmbed(interaction);
     }
   },

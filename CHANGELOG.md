@@ -1,6 +1,13 @@
 # Changelog
 
-## v1.4.0 and v1.5.0 
+## [1.5.1] - 2026-04-20
+
+### 🔧 Fixes & Refactors
+- Resolved circular dependency in `sync_slash.ts` and refactored the sync logic for better runtime stability.
+- Updated `package.json` entry point and fixed the directory mismatch between source files and the compiled `dist/` layout.
+- Added optional chaining (`?`) to `bank.ts` command descriptions to prevent "undefined" crashes during registration.
+
+## [v1.4.0 & v1.5.0] - 2026-04-20
 - Added `bank_balance` for members to view their bank balance
 
 ## Changes
@@ -11,7 +18,7 @@
 ## Know bugs
 - `bank.ts` isnt syncing correctly somehow but its correctly exported
 
-## v1.2.0
+## [v1.2.0] - 2026-04-19
 - Added `set_economy_symbol` so admins can change the economy icon
 
 ## Changes
@@ -24,15 +31,15 @@
 - All `dashboard/` folder
 - All `backend/` folder
 
-## v1.1.2
+## [v1.1.2] - 2026-04-18
 - Fixed inconsistencies in embed thumbnail width and height
 - Removed new image text from thumbnails
 
-## v1.1.1
+## [v1.1.1] - 2026-04-17
 - Optimized user-admin permission validation
 - Added `success_icon.png` file
 
-## v1.1.0
+## [1.1.0] - 2026-04-17
 - Added `set_cooldown_time` so admins can manage the cooldown time for the `work` command
 
 ### Patches
@@ -44,7 +51,7 @@
 - Removed `s_manager.ts` — same deal
 - Cleaned up leftover `console.log()` calls from `cd_manager.ts` and `work`
 
-## v1.0.1
+## [1.0.1] - 2026-04-17
 - Fixed a bug in the `work` command where the cooldown was showing milliseconds instead of seconds
 - Improved time system handling and consistency
 
@@ -52,7 +59,7 @@
 - `work` command is now more stable and consistent
 - Cooldown system is more reliable and easier to maintain
 
-## v1.0.0
+## [1.0.0] - 2026-04-17
 - Added `/work` so users can earn money in a simple way
 - Added `/wallet_balance` to check wallet balance publicly or privately
 - Added `/add_balance` so admins can grant balance to users

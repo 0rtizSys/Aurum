@@ -1,5 +1,5 @@
-import {SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction}
-from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction }
+  from "discord.js";
 
 import { sendSimpleEmbed } from "../../Helpers/simplified_embed_builder";
 
@@ -20,11 +20,12 @@ export const pingSlash: Command = {
     const sent = await interaction.fetchReply();
     const ping = sent.createdTimestamp - interaction.createdTimestamp;
 
-    await sendSimpleEmbed(interaction,{
-      title:'Pong 🏓',
-      fields:[
-        {name: "Latency", value: `${ping}ms 📶`, inline: true},
-        {name: "API", value: `${interaction.client.ws.ping}ms 🛜`, inline: true,
+    await sendSimpleEmbed(interaction, {
+      title: 'Pong 🏓',
+      fields: [
+        { name: "Latency", value: `${ping}ms 📶`, inline: true },
+        {
+          name: "API", value: `${interaction.client.ws.ping}ms 🛜`, inline: true,
         },
       ]
     })

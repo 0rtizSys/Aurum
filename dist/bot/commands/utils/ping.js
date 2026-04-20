@@ -17,7 +17,8 @@ exports.pingSlash = {
             title: 'Pong 🏓',
             fields: [
                 { name: "Latency", value: `${ping}ms 📶`, inline: true },
-                { name: "API", value: `${interaction.client.ws.ping}ms 🛜`, inline: true,
+                {
+                    name: "API", value: `${interaction.client.ws.ping}ms 🛜`, inline: true,
                 },
             ]
         });
