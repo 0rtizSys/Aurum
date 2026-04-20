@@ -8,7 +8,7 @@ const ping_js_1 = require("./commands/utils/ping.js");
 // ! =========================
 // ! Development
 // ! =========================
-const sync_slash_js_1 = require("./commands/developer/sync_slash.js");
+const sync_slash_js_1 = require("./commands/dev/sync_slash.js");
 // * =========================
 // * Economy - Public
 // * =========================

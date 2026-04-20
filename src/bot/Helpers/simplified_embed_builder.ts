@@ -4,7 +4,6 @@ import {
   EmbedBuilder,
   ChatInputCommandInteraction,
   MessageFlags,
-  Embed,
 } from "discord.js";
 
 type SimpleEmbedOptions = {
@@ -12,7 +11,7 @@ type SimpleEmbedOptions = {
   description?: string;
   thumType?: "error" | "success";
   eph?: boolean;
-  fields?: {name:string,value:string,inline?:boolean}[];
+  fields?: { name: string, value: string, inline?: boolean }[];
 };
 
 export async function sendSimpleEmbed(
@@ -21,17 +20,17 @@ export async function sendSimpleEmbed(
 ): Promise<void> {
   const embed = new EmbedBuilder()
     .setColor(embColor)
-    
-  if(options.title){embed.setTitle(options.title)}
-  if(options.description){embed.setDescription(options.description)}  
 
-  if (options.thumType === "error") {embed.setThumbnail(errorIcon);}
-  else if (options.thumType === "success") {embed.setThumbnail(successIcon);}
+  if (options.title) { embed.setTitle(options.title) }
+  if (options.description) { embed.setDescription(options.description) }
 
-  if(options.fields){embed.addFields(options.fields)}
+  if (options.thumType === "error") { embed.setThumbnail(errorIcon); }
+  else if (options.thumType === "success") { embed.setThumbnail(successIcon); }
 
-  if (interaction.deferred || interaction.replied) {await interaction.editReply({embeds:[embed]});}
-  else{interaction.reply({embeds:[embed], flags: options.eph ? MessageFlags.Ephemeral : undefined});}
+  if (options.fields) { embed.addFields(options.fields) }
+
+  if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }); }
+  else { interaction.reply({ embeds: [embed], flags: options.eph ? MessageFlags.Ephemeral : undefined }); }
 }
 
 //?-------------------------------
@@ -40,13 +39,13 @@ export async function sendSimpleEmbed(
 
 export async function internalErrorEmbed(interaction: ChatInputCommandInteraction) {
   const embed = new EmbedBuilder()
-  .setColor(embColor)
-  .setTitle('✖️ Something went wrong')
-  .setDescription('An unexpected error occurred while processing your request.\nPlease try again in a moment 💡')
-  .setThumbnail(errorIcon)
+    .setColor(embColor)
+    .setTitle('✖️ Something went wrong')
+    .setDescription('An unexpected error occurred while processing your request.\nPlease try again in a moment 💡')
+    .setThumbnail(errorIcon)
 
-  if(interaction.deferred || interaction.replied){ await interaction.editReply({embeds:[embed]})}
-  else{interaction.reply({embeds:[embed], flags: MessageFlags.Ephemeral})}
+  if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
+  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }
 
 //?---------------------------------
@@ -54,12 +53,12 @@ export async function internalErrorEmbed(interaction: ChatInputCommandInteractio
 //?---------------------------------
 
 
-export async function notEnoughPermsEmbed(interaction:ChatInputCommandInteraction){
+export async function notEnoughPermsEmbed(interaction: ChatInputCommandInteraction) {
   const embed = new EmbedBuilder()
-  .setTitle('✖️ Error')
-  .setDescription('Aurum: You dont have enough perms to do that! 😥')
-  .setThumbnail(errorIcon)
+    .setTitle('✖️ Error')
+    .setDescription('Aurum: You dont have enough perms to do that! 😥')
+    .setThumbnail(errorIcon)
 
-  if(interaction.deferred || interaction.replied){ await interaction.editReply({embeds:[embed]})}
-  else{interaction.reply({embeds:[embed], flags: MessageFlags.Ephemeral})}
+  if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
+  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }

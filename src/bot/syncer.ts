@@ -8,7 +8,7 @@ import { pingSlash } from "./commands/utils/ping.js";
 // ! Development
 // ! =========================
 
-import { syncSlash } from "./commands/developer/sync_slash.js";
+import { syncSlash } from "./commands/dev/sync_slash.js";
 
 // * =========================
 // * Economy - Public

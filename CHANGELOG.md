@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.3.0
+## v1.4.0 and v1.5.0 
 - Added `bank_balance` for members to view their bank balance
 
 ## Changes
@@ -9,7 +9,7 @@
 - Removed unused `const result =` in `set_cd_time.ts` and `set_eco_symbol.ts`
 
 ## Know bugs
-- `bank.ts` isnt syncing correctly somehow
+- `bank.ts` isnt syncing correctly somehow but its correctly exported
 
 ## v1.2.0
 - Added `set_economy_symbol` so admins can change the economy icon
