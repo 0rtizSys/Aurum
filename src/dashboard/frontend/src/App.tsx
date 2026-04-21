@@ -1,34 +1,116 @@
-import './App.css'
+import { useEffect, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { Dashboard } from "./pages/Dashboard";
+import { Maintenance } from "./pages/Maintenance";
+import type { ApiState } from "./types/dashboard";
 
-function App() {
-  return (
-    <div className="min-h-screen bg-[#0f0f12] flex flex-col items-center justify-center text-white font-sans">
-      <div className="text-center space-y-6">
-        {/* Un placeholder para el logo de Aurum */}
-        <div className="w-24 h-24 bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-full mx-auto shadow-lg shadow-yellow-500/20 flex items-center justify-center">
-          <span className="text-4xl font-bold">A</span>
-        </div>
-
-        <h1 className="text-5xl font-extrabold tracking-tight">
-          Aurum <span className="text-yellow-500">Dashboard</span>
-        </h1>
-
-        <p className="text-slate-400 text-lg max-w-md mx-auto">
-          Estamos forjando el panel de control. El bot sigue operando, pero la web está bajo mantenimiento.
-        </p>
-
-        <div className="flex items-center justify-center gap-3">
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
-          </span>
-          <span className="text-sm font-mono text-yellow-500/80 uppercase tracking-widest">
-            Working on backend connection...
-          </span>
-        </div>
-      </div>
-    </div>
-  )
+interface DashboardStatusResponse {
+  inMaintenance?: boolean;
 }
 
-export default App
+interface DashboardStatusState {
+  apiState: ApiState;
+  inMaintenance: boolean;
+}
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+const STATUS_ENDPOINT = `${API_BASE_URL}/api/status`;
+
+function LoadingScreen() {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6">
+      <div className="steel-panel w-full max-w-md space-y-4 p-8 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border border-slate-700 bg-slate-950 text-sm font-semibold uppercase tracking-[0.24em] text-white">
+          AU
+        </div>
+        <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-500">
+          Aurum Dashboard
+        </p>
+        <h1 className="text-2xl font-semibold text-white">Conectando con el panel</h1>
+        <p className="text-sm leading-7 text-slate-400">
+          Estamos revisando el estado de mantenimiento para decidir si mostramos el dashboard o la vista de resguardo.
+        </p>
+      </div>
+    </main>
+  );
+}
+
+export default function App() {
+  const [status, setStatus] = useState<DashboardStatusState>({
+    apiState: "checking",
+    inMaintenance: false,
+  });
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadDashboardStatus() {
+      try {
+        const response = await fetch(STATUS_ENDPOINT, { signal: controller.signal });
+
+        if (!response.ok) {
+          throw new Error(`Status endpoint failed with ${response.status}`);
+        }
+
+        const data = (await response.json()) as DashboardStatusResponse;
+
+        setStatus({
+          apiState: "online",
+          inMaintenance: Boolean(data.inMaintenance),
+        });
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        console.error("Dashboard status check failed:", error);
+        setStatus({
+          apiState: "offline",
+          inMaintenance: false,
+        });
+      }
+    }
+
+    void loadDashboardStatus();
+
+    return () => controller.abort();
+  }, []);
+
+  if (status.apiState === "checking") {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/maintenance"
+          element={<Maintenance apiState={status.apiState} statusEndpoint={STATUS_ENDPOINT} />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            status.inMaintenance ? (
+              <Navigate to="/maintenance" replace />
+            ) : (
+              <Dashboard apiState={status.apiState} statusEndpoint={STATUS_ENDPOINT} />
+            )
+          }
+        />
+
+        <Route
+          path="*"
+          element={
+            status.inMaintenance ? (
+              <Navigate to="/maintenance" replace />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+}

@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import * as dotenv from "dotenv";
 import { cmds } from "./syncer";
+import fs from 'fs';
 
 dotenv.config();
 
@@ -32,6 +33,32 @@ client.once(Events.ClientReady, () => {
     ],
     status: "online",
   });
+  /**
+   * Set interval to write 
+   * the actual state of the
+   * bot on the dashboard
+   * 
+   * ! THIS DOES NOT AFFECT THE [main] BRANCH
+   */
+
+  setInterval(() => {
+    try {
+      const heartbeat = {
+        status: 'online',
+        last_heartbeat: Date.now(),
+        bot_tag: client.user?.tag
+      };
+
+      // Escribimos de forma síncrona para asegurar que se guarde antes de que Node siga
+      fs.writeFileSync('/home/j0srd3v/last_heartbeat.json', JSON.stringify(heartbeat));
+
+      // Un log opcional para que tú veas que funciona (puedes quitarlo luego)
+      console.log("💓 Heartbeat actualizado");
+
+    } catch (err) {
+      console.error("❌ No se pudo escribir el heartbeat:", err);
+    }
+  }, 30000);
 });
 
 client.on(Events.InteractionCreate, async (interaction: Interaction) => {

@@ -32,10 +32,14 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const dotenv = __importStar(require("dotenv"));
 const syncer_1 = require("./syncer");
+const fs_1 = __importDefault(require("fs"));
 dotenv.config();
 const client = new discord_js_1.Client({
     intents: [
@@ -56,6 +60,29 @@ client.once(discord_js_1.Events.ClientReady, () => {
         ],
         status: "online",
     });
+    /**
+     * Set interval to write
+     * the actual state of the
+     * bot on the dashboard
+     *
+     * ! THIS DOES NOT AFFECT THE [main] BRANCH
+     */
+    setInterval(() => {
+        try {
+            const heartbeat = {
+                status: 'online',
+                last_heartbeat: Date.now(),
+                bot_tag: client.user?.tag
+            };
+            // Escribimos de forma síncrona para asegurar que se guarde antes de que Node siga
+            fs_1.default.writeFileSync('/home/j0srd3v/last_heartbeat.json', JSON.stringify(heartbeat));
+            // Un log opcional para que tú veas que funciona (puedes quitarlo luego)
+            console.log("💓 Heartbeat actualizado");
+        }
+        catch (err) {
+            console.error("❌ No se pudo escribir el heartbeat:", err);
+        }
+    }, 30000);
 });
 client.on(discord_js_1.Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand())
