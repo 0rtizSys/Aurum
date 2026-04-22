@@ -1,18 +1,10 @@
-import { embColor, errorIcon, successIcon } from "../configs/exporter";
+import { embColor, errorIcon, successIcon }
+  from "../configs/exporter";
 
-import {
-  EmbedBuilder,
-  ChatInputCommandInteraction,
-  MessageFlags,
-} from "discord.js";
+import { EmbedBuilder, ChatInputCommandInteraction, MessageFlags, }
+  from "discord.js";
 
-type SimpleEmbedOptions = {
-  title?: string;
-  description?: string;
-  thumType?: "error" | "success";
-  eph?: boolean;
-  fields?: { name: string, value: string, inline?: boolean }[];
-};
+import { SimpleEmbedOptions } from "../commands/types";
 
 export async function sendSimpleEmbed(
   interaction: ChatInputCommandInteraction,
@@ -55,10 +47,59 @@ export async function internalErrorEmbed(interaction: ChatInputCommandInteractio
 
 export async function notEnoughPermsEmbed(interaction: ChatInputCommandInteraction) {
   const embed = new EmbedBuilder()
+    .setColor(embColor)
     .setTitle('✖️ Error')
     .setDescription('Aurum: You dont have enough perms to do that! 😥')
     .setThumbnail(errorIcon)
 
+  if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
+  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+}
+
+//?-----------------------------------
+//? Amount Below 0 or Above 1 Million
+//?-----------------------------------
+
+export async function amountErrorEmbed(interaction: ChatInputCommandInteraction) {
+  const embed = new EmbedBuilder()
+    .setColor(embColor)
+    .setTitle('✖️ Error')
+    .setDescription('Amount cannot be below \`1\` or above \`1,000,000,000\`')
+    .setThumbnail(errorIcon)
+
+  if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
+  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+}
+
+//?-------------------------
+//? Transaction went wrong
+//?-------------------------
+
+export async function transactionWentWrong(interaction: ChatInputCommandInteraction) {
+  const embed = new EmbedBuilder()
+    .setColor(embColor)
+    .setTitle('✖️ Transaction went wrong')
+    .setDescription('An unexpected error occurred while processing your request.\nPlease try again in a moment 💡')
+    .setThumbnail(errorIcon)
+  if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
+  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+}
+
+//?--------------------
+//? Insuficients funds
+//?--------------------
+
+export async function InsuficientsFundsEmbed(
+  interaction: ChatInputCommandInteraction,
+  currentBalance: number,
+  currentAmount: number,
+  symbol: string,
+) {
+  const embed = new EmbedBuilder()
+    .setColor(embColor)
+    .setTitle('✖️ Insufficient funds')
+    .setDescription(`Current balance: \`${symbol}${currentBalance}\` \nAmount to transfer: \`${symbol}${currentAmount}\``)
+    .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
   else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }
