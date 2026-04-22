@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { Dashboard } from "./pages/Dashboard";
 import { Maintenance } from "./pages/Maintenance";
+import { UserCommandTester } from "./pages/UserCommandTester";
 import type { ApiState } from "./types/dashboard";
 
 interface DashboardStatusResponse {
@@ -14,7 +15,7 @@ interface DashboardStatusState {
   inMaintenance: boolean;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+const API_BASE_URL = "http://localhost:3001";
 const STATUS_ENDPOINT = `${API_BASE_URL}/api/status`;
 
 function LoadingScreen() {
@@ -96,6 +97,17 @@ export default function App() {
               <Navigate to="/maintenance" replace />
             ) : (
               <Dashboard apiState={status.apiState} statusEndpoint={STATUS_ENDPOINT} />
+            )
+          }
+        />
+
+        <Route
+          path="/commands"
+          element={
+            status.inMaintenance ? (
+              <Navigate to="/maintenance" replace />
+            ) : (
+              <UserCommandTester />
             )
           }
         />

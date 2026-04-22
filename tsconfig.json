@@ -8,9 +8,14 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
+  "include": [
+    "src/shared/api/heartbeat.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",
-    "aurum-dashboard"
+    "aurum-dashboard",
+    "frontend",
+    "dashboard/"
   ]
 }

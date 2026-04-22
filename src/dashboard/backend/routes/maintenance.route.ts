@@ -7,7 +7,7 @@ router.get('/status', (req: Request, res: Response) => {
     // Aquí es donde "sirves" la respuesta. 
     // En el backend, casi siempre servimos JSON (datos).
     res.json({
-        inMaintenance: true,
+        inMaintenance: false,
         message: "El sistema Aurum está en mantenimiento técnico.",
         version: "1.1.0-alpha"
     });
