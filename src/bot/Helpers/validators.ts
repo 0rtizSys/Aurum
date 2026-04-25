@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction } from "discord.js";
-import { amountErrorEmbed } from "./simplified_embed_builder";
+import { amountErrorEmbed, SameUserEmbed } from "./simplified_embed_builder";
 import { getBalanceBW } from "../services/database/tables/clients/manager";
 import { InsuficientsFundsEmbed } from "./simplified_embed_builder";
 import z from 'zod';
@@ -12,22 +12,12 @@ const UntrustedData = z.object({
     UntAmount: z.number().min(1).max(1_000_000_000),
 })
 
-const hasSufficientFundsSchema = z.object({
-    userID: z.string()
-        .min(17, "Invalid user ID length")
-        .max(19, "Invalid user ID length"),
-    guildID: z.string()
-        .min(17, "Invalid guild ID length")
-        .max(19, "Invalid guild ID length"),
-    Amount: z.number(),
-    economySymbol: z.string(),
-})
 
 //? ---------------------
 //? EXPORTABLE FUNCTIONS
 //? ---------------------
 
-export async function amountBelowZero(
+export async function isInvalidAmount(
     interaction: ChatInputCommandInteraction,
     amount: number
 ): Promise<boolean> {
@@ -40,26 +30,30 @@ export async function amountBelowZero(
     return false;
 }
 
-export async function hasSufficientFunds(
+export async function hasEnoughBalance(
     interaction: ChatInputCommandInteraction,
     userId: string,
     guildId: string,
     amount: number,
     ecoSymbol: string,
 ) {
-    const input = { userID: userId, guildID: guildId, Amount: amount, economySymbol: ecoSymbol }
-    const data = hasSufficientFundsSchema.safeParse(input)
     const balance = await getBalanceBW(userId, guildId, "bank")
-
-    if (data.success !== true) {
-        console.log('error parsing')
-        return true;
-    } else {
-        if (balance < amount) {
-            await InsuficientsFundsEmbed(interaction, balance, amount, ecoSymbol)
-            return false;
-        }
+    if (balance < amount) {
+        await InsuficientsFundsEmbed(interaction, balance, amount, ecoSymbol);
         return true;
     }
+    return false;
+}
 
+
+export async function isSelfTransfer(
+    interaction: ChatInputCommandInteraction,
+    userId: string,
+    targetId: string,
+) {
+    if (userId === targetId) {
+        await SameUserEmbed(interaction);
+        return true;
+    }
+    return false;
 }

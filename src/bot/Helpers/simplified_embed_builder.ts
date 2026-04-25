@@ -49,7 +49,7 @@ export async function notEnoughPermsEmbed(interaction: ChatInputCommandInteracti
   const embed = new EmbedBuilder()
     .setColor(embColor)
     .setTitle('✖️ Error')
-    .setDescription('Aurum: You dont have enough perms to do that! 😥')
+    .setDescription('Aurum: You dont have enough perms to do that!')
     .setThumbnail(errorIcon)
 
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
@@ -99,6 +99,34 @@ export async function InsuficientsFundsEmbed(
     .setColor(embColor)
     .setTitle('✖️ Insufficient funds')
     .setDescription(`Current balance: \`${symbol}${currentBalance}\` \nAmount to transfer: \`${symbol}${currentAmount}\``)
+    .setThumbnail(errorIcon)
+  if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
+  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+}
+
+//?------------------
+//?  Same User Error
+//?------------------
+
+export async function SameUserEmbed(interaction:ChatInputCommandInteraction) {
+  const embed = new EmbedBuilder()
+    .setColor(embColor)
+    .setTitle('✖️ Error')
+    .setDescription(`Aurum: Ops, you cant transfer yourself balance!`)
+    .setThumbnail(errorIcon)
+  if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
+  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+}
+
+//?-------------------
+//?  Bot Target Embed
+//?-------------------
+
+export async function botTargetEmbed(interaction:ChatInputCommandInteraction) {
+  const embed = new EmbedBuilder()
+    .setColor(embColor)
+    .setTitle('✖️ Error')
+    .setDescription(`Aurum: Ops, you cant transfer yourself balance!`)
     .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
   else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
