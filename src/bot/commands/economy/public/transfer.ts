@@ -1,3 +1,6 @@
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, }
+    from "discord.js";
+
 import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags }
     from "discord.js";
 
@@ -10,7 +13,7 @@ import { Command }
 import { isInvalidAmount, hasEnoughBalance, isSelfTransfer }
     from "../../../Helpers/validators";
 
-import { internalErrorEmbed, transactionWentWrong }
+import { internalErrorEmbed }
     from "../../../Helpers/simplified_embed_builder";
 
 import { transferSafe }
@@ -18,9 +21,6 @@ import { transferSafe }
 
 import { getEcoSymbol }
     from "../../../services/database/tables/servers/get_eco_symbol";
-
-import { sendSimpleEmbed }
-    from "../../../Helpers/simplified_embed_builder";
 
 export const transferCommand: Command = {
     data: new SlashCommandBuilder()
@@ -54,15 +54,48 @@ export const transferCommand: Command = {
             if (await isSelfTransfer(interaction, userId, targetId)) return;
             if (await isInvalidAmount(interaction, amount)) return;
             if (!(await hasEnoughBalance(interaction, userId, guildId, amount, symbol))) return;
-            const isAnyError = await transferSafe(userId, targetId, guildId, amount);
-            if (isAnyError) {
-                return await transactionWentWrong(interaction);
-            }
-            await sendSimpleEmbed(interaction, {
-                title: 'Transaction completed 💳',
-                description: isPublic
-                    ? `${interaction.user} successfully transferred \`${symbol}${amount}\` to <@${targetId}>`
-                    : `Successfully transferred \`${symbol}${amount}\` to <@${targetId}>`
+
+            const confirmButton = new ButtonBuilder()
+                .setCustomId('transfer_confirm')
+                .setLabel('Confirm')
+                .setStyle(ButtonStyle.Success)
+
+            const cancelButton = new ButtonBuilder()
+                .setCustomId('transfer_cancel')
+                .setLabel('Cancel')
+                .setStyle(ButtonStyle.Danger)
+
+            const row = new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(confirmButton, cancelButton);
+
+            const msg = await interaction.editReply({
+                content: "¿Confirmas esta transferencia?",
+                components: [row],
+            });
+
+            const collector = msg.createMessageComponentCollector({
+                componentType: ComponentType.Button,
+                time: 15000, // 15 segundos
+            });
+
+            collector.on("collect", async (i) => {
+                if (i.user.id !== interaction.user.id) return;
+
+                if (i.customId === "transfer_confirm") {
+                    await transferSafe(userId, targetId, guildId, amount);
+
+                    await i.update({
+                        content: "Transferencia completada 💳",
+                        components: [],
+                    });
+                }
+
+                if (i.customId === "transfer_cancel") {
+                    await i.update({
+                        content: "Transferencia cancelada ❌",
+                        components: [],
+                    });
+                }
             });
         } catch (err) {
             console.log(err)
