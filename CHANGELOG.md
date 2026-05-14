@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.7.1] - 2026-05-13
+- Updated `README.md`
+- Added `DATABASE_SCHEMA.md`
+- Added `env.example`
+
 ## [1.7.0] - 2026-05-13
 - Added `withdraw.ts`
 - Added new parameter `type` with options `transfer / withdraw` on `hasInsufficientBalance()` function

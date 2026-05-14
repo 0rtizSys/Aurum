@@ -1,42 +1,42 @@
-# Esquema de Base de Datos (inferido del código)
+# Database Schema (inferred from code)
 
-Este documento describe el **schema usado por el bot** según las consultas SQL encontradas en `src/bot/services/database/tables/**`.
+This document describes the database schema used by the bot based on SQL queries found in `src/bot/services/database/tables/**`.
 
-> Nota: No se encontraron migraciones/DDL (`CREATE TABLE ...`) dentro del repo.  
-> Por lo tanto, los tipos/constraints aquí son **recomendados** e **inferidos** a partir del uso en código (PostgreSQL).
+> Note: No migrations/DDL (`CREATE TABLE ...`) were found in this repository.  
+> Because of that, types/constraints below are **recommended** and **inferred** from how the code uses PostgreSQL.
 
-## Convenciones
+## Conventions
 
-- `guild_id` y `user_id` se tratan como strings (IDs de Discord) → recomendado `TEXT`.
-- Montos (`wallet`, `bank`) se tratan como números enteros → recomendado `BIGINT` (evita overflow).
-- Tiempos:
-  - `cooldown_time` se usa en **segundos**.
-  - `cooldown` se guarda como `Date.now()` en **milisegundos epoch**.
+- `guild_id` and `user_id` are treated as strings (Discord IDs) → recommended type: `TEXT`.
+- Amounts (`wallet`, `bank`) are treated as integers → recommended type: `BIGINT` (prevents overflow).
+- Time-related values:
+  - `cooldown_time` is stored/handled in **seconds**.
+  - `cooldown` is stored as `Date.now()` **epoch milliseconds**.
 
 ---
 
-## Clients / Economía
+## Clients / Economy
 
-### Tabla: `clients`
+### Table: `clients`
 
-Usada por:
+Used by:
 - `src/bot/services/database/tables/clients/manager.ts`
 - `src/bot/services/database/tables/clients/transaction.ts`
 
-**Columnas**
+**Columns**
 
-| Columna    | Tipo recomendado | Null | Default | Descripción |
+| Column    | Recommended type | Null | Default | Description |
 |-----------|------------------|------|---------|-------------|
-| `user_id`  | `TEXT`           | NO   |         | ID de usuario (Discord) |
-| `guild_id` | `TEXT`           | NO   |         | ID de servidor (Discord) |
-| `wallet`   | `BIGINT`         | NO   | `0`     | Balance en cartera |
-| `bank`     | `BIGINT`         | NO   | `0`     | Balance en banco |
+| `user_id`  | `TEXT`           | NO   |         | User ID (Discord) |
+| `guild_id` | `TEXT`           | NO   |         | Guild/server ID (Discord) |
+| `wallet`   | `BIGINT`         | NO   | `0`     | Wallet balance |
+| `bank`     | `BIGINT`         | NO   | `0`     | Bank balance |
 
-**Constraints / índices**
+**Constraints / indexes**
 
-- `UNIQUE (user_id, guild_id)` o `PRIMARY KEY (user_id, guild_id)` (requerido por el `ON CONFLICT (user_id, guild_id)`).
+- `UNIQUE (user_id, guild_id)` or `PRIMARY KEY (user_id, guild_id)` (required by `ON CONFLICT (user_id, guild_id)`).
 
-**DDL sugerido**
+**Suggested DDL**
 
 ```sql
 CREATE TABLE IF NOT EXISTS clients (
@@ -52,24 +52,24 @@ CREATE TABLE IF NOT EXISTS clients (
 
 ## Cooldowns
 
-### Tabla: `cooldowns_table`
+### Table: `cooldowns_table`
 
-Usada por:
+Used by:
 - `src/bot/services/database/tables/cooldowns/cd_manager.ts`
 
-**Columnas**
+**Columns**
 
-| Columna    | Tipo recomendado | Null | Default | Descripción |
+| Column    | Recommended type | Null | Default | Description |
 |-----------|------------------|------|---------|-------------|
-| `guild_id` | `TEXT`           | NO   |         | ID de servidor (Discord) |
-| `user_id`  | `TEXT`           | NO   |         | ID de usuario (Discord) |
-| `cooldown` | `BIGINT`         | NO   |         | Fin del cooldown en ms epoch (`Date.now() + durationMs`) |
+| `guild_id` | `TEXT`           | NO   |         | Guild/server ID (Discord) |
+| `user_id`  | `TEXT`           | NO   |         | User ID (Discord) |
+| `cooldown` | `BIGINT`         | NO   |         | Cooldown end time in epoch ms (`Date.now() + durationMs`) |
 
-**Constraints / índices**
+**Constraints / indexes**
 
-- `UNIQUE (guild_id, user_id)` o `PRIMARY KEY (guild_id, user_id)` (requerido por el `ON CONFLICT (guild_id, user_id)`).
+- `UNIQUE (guild_id, user_id)` or `PRIMARY KEY (guild_id, user_id)` (required by `ON CONFLICT (guild_id, user_id)`).
 
-**DDL sugerido**
+**Suggested DDL**
 
 ```sql
 CREATE TABLE IF NOT EXISTS cooldowns_table (
@@ -82,29 +82,29 @@ CREATE TABLE IF NOT EXISTS cooldowns_table (
 
 ---
 
-## Servers / Configuración por servidor
+## Servers / Per-guild configuration
 
-### Tabla: `server_configurations`
+### Table: `server_configurations`
 
-Usada por:
+Used by:
 - `src/bot/services/database/tables/servers/get_cd_time.ts`
 - `src/bot/services/database/tables/servers/set_cd_time.ts`
 - `src/bot/services/database/tables/servers/get_eco_symbol.ts`
 - `src/bot/services/database/tables/servers/set_eco_symbol.ts`
 
-**Columnas**
+**Columns**
 
-| Columna           | Tipo recomendado | Null | Default | Descripción |
+| Column           | Recommended type | Null | Default | Description |
 |------------------|------------------|------|---------|-------------|
-| `guild_id`        | `TEXT`           | NO   |         | ID de servidor (Discord) |
-| `cooldown_time`   | `INTEGER`        | SI/NO |         | Cooldown por defecto en segundos (en código cae a `1800` si no existe fila) |
-| `economy_symbol`  | `TEXT`           | SI/NO |         | Símbolo de economía (en código cae a `"$"` si no existe fila) |
+| `guild_id`        | `TEXT`           | NO   |         | Guild/server ID (Discord) |
+| `cooldown_time`   | `INTEGER`        | YES/NO |         | Work cooldown in seconds (code falls back to `1800` if row is missing) |
+| `economy_symbol`  | `TEXT`           | YES/NO |         | Economy symbol (code falls back to `"$"` if row is missing) |
 
-**Constraints / índices**
+**Constraints / indexes**
 
-- `UNIQUE (guild_id)` o `PRIMARY KEY (guild_id)` (requerido por el `ON CONFLICT (guild_id)`).
+- `UNIQUE (guild_id)` or `PRIMARY KEY (guild_id)` (required by `ON CONFLICT (guild_id)`).
 
-**DDL sugerido**
+**Suggested DDL**
 
 ```sql
 CREATE TABLE IF NOT EXISTS server_configurations (
@@ -116,9 +116,8 @@ CREATE TABLE IF NOT EXISTS server_configurations (
 
 ---
 
-## Observaciones de integridad
+## Integrity notes
 
-- No hay llaves foráneas en el código (p.ej. `clients.guild_id` → `server_configurations.guild_id`), pero se podría considerar si quieres enforcement.
-- `transferSafe(...)` usa transacción y `SELECT ... FOR UPDATE` sobre `clients` para evitar race conditions al transferir desde `bank`.
-- Si planeas permitir montos grandes, usa `BIGINT` en `wallet/bank` y valida límites en la capa de aplicación.
-
+- There are no foreign keys enforced by the code (e.g. `clients.guild_id` → `server_configurations.guild_id`), but you may add them if you want strict relational integrity.
+- `transferSafe(...)` uses a transaction and `SELECT ... FOR UPDATE` on `clients` to prevent race conditions when transferring from `bank`.
+- If you expect large amounts, keep `BIGINT` for `wallet/bank` and validate limits at the application layer.

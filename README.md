@@ -13,7 +13,7 @@ It is designed around a simple server-based economy: users can work for money, c
   - economy symbol
   - work cooldown time
 - Shared embed helpers for consistent bot responses.
-- Internal slash command sync command for development and deployment.
+- Internal slash command sync command for development and deployment (guild-only).
 
 ## Commands
 
@@ -33,6 +33,19 @@ It is designed around a simple server-based economy: users can work for money, c
 - `/bank_balance`
   - Shows the user's current bank balance.
 
+- `/withdraw`
+  - Withdraws an amount from `bank` into `wallet`.
+  - Options:
+    - `amount`
+    - `visibility` (optional)
+
+- `/transfer`
+  - Transfers `bank` balance to another user (ACID transaction).
+  - Options:
+    - `user`
+    - `amount`
+    - `visibility` (optional)
+
 ### Moderator / Admin Commands
 
 - `/add_balance`
@@ -42,21 +55,22 @@ It is designed around a simple server-based economy: users can work for money, c
     - `amount`
     - `user`
     - `visibility`
-  - Intended for server administrators.
+  - Requires Administrator permission.
 
 - `/set_cooldown_time`
   - Changes the cooldown time used by `/work`.
   - Value is set in seconds.
-  - Intended for server administrators.
+  - Requires Administrator permission.
 
 - `/set_economy_symbol`
   - Changes the economy symbol used in that server.
   - Symbol length is limited to 1 or 2 characters.
+  - Requires Administrator permission.
 
 ### Developer Command
 
-- `/sync_slash`
-  - Syncs slash commands globally or to the configured test guild.
+- `/sync_slash_guild`
+  - Syncs slash commands to the configured guild (and clears duplicates there).
   - Restricted to `OWNER_ID`.
   - Uses:
     - `CLIENT_ID`
@@ -82,7 +96,8 @@ DB_NAME=
 
 ## Database Expectations
 
-The bot connects to PostgreSQL through `pg` and expects the following tables to already exist:
+The bot connects to PostgreSQL through `pg` and expects the following tables to already exist.
+See `DATABASE_SCHEMA.md` to gather information about the tables the program expects
 
 ### `clients`
 
@@ -127,13 +142,22 @@ Expected constraint:
 
 - unique or primary key on `guild_id`
 
+## Quick Start
+
+1. Install dependencies:
+   - `npm install`
+2. Create and fill `.env` (see variables above).
+3. Create the database tables (see `DATABASE_SCHEMA.md`).
+4. Build & run:
+   - `npm run compile`
+
 ## Project Structure
 
 ```text
 src/
   bot/
     commands/
-      developer/
+      dev/
       economy/
         admin/
         moderators/
@@ -180,15 +204,14 @@ Current `package.json` scripts:
 ```json
 {
   "dev": "tsc --watch",
-  "compile": "tsc && node dist/"
+  "compile": "npx tsc && node dist/bot/index.js"
 }
 ```
 
 Notes:
 
-- `dev` currently watches TypeScript compilation only.
-- `compile` compiles the project and then tries to run `dist/`.
-- If you want a smoother local workflow, this area is a good candidate for improvement.
+- `dev` watches TypeScript compilation only (it does not run the bot).
+- `compile` builds TypeScript and runs the compiled entrypoint.
 
 ## Tech Stack
 
@@ -198,14 +221,13 @@ Notes:
 - PostgreSQL
 - dotenv
 - Prettier
+- zod
 
 ## Current Limitations
 
 - No migration or schema bootstrap files are included.
 - No automated test suite is present.
-- The README previously under-documented setup and database expectations.
 - Some command validations and permission checks could still be tightened in code.
-- The bank balance can be modified through admin commands, but there is no public command yet to view bank balance.
 
 ## Changelog
 
