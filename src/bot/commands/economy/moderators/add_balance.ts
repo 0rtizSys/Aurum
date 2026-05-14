@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction, PermissionFlagsBits, MessageFlags }
   from "discord.js";
 
-import { addBalanceBW }
+import { addBalance }
   from "../../../services/database/tables/clients/manager";
 
 import { sendSimpleEmbed, internalErrorEmbed }
@@ -15,7 +15,7 @@ export interface Command {
   execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
 }
 
-export const addBalance: Command = {
+export const addBalanceCommand: Command = {
   data: new SlashCommandBuilder()
     .setName("add_balance")
     .setDescription("Add balance to an user wallet or bank")
@@ -88,10 +88,10 @@ export const addBalance: Command = {
     await interaction.deferReply({ flags: isPublic ? undefined : MessageFlags.Ephemeral, });
     //? Managing DB logic -
     try {
-      await addBalanceBW(userTargetID, guildId, method, amount);
+      await addBalance(userTargetID, guildId, method, amount);
       await sendSimpleEmbed(interaction, {
         title: 'Added balance ✅',
-        description: `${interaction.user} Added \`${symbol}${amount}\` to ${userTarget} 💳`,
+        description: `${interaction.user} Added \`${symbol} ${amount}\` to ${userTarget} 💳`,
         thumType: 'success'
       })
     } catch (error) {

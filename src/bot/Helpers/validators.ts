@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction } from "discord.js";
-import { amountErrorEmbed, SameUserEmbed } from "./simplified_embed_builder";
-import { getBalanceBW } from "../services/database/tables/clients/manager";
+import { amountErrorEmbed, botTargetEmbed, SameUserEmbed } from "./simplified_embed_builder";
+import { getBalance } from "../services/database/tables/clients/manager";
 import { InsuficientsFundsEmbed } from "./simplified_embed_builder";
 import z from 'zod';
 
@@ -30,16 +30,17 @@ export async function isInvalidAmount(
     return false;
 }
 
-export async function hasEnoughBalance(
+export async function hasInsufficientBalance(
     interaction: ChatInputCommandInteraction,
     userId: string,
     guildId: string,
     amount: number,
     ecoSymbol: string,
+    type: "transfer" | "withdraw"
 ) {
-    const balance = await getBalanceBW(userId, guildId, "bank")
+    const balance = await getBalance(userId, guildId, "bank")
     if (balance < amount) {
-        await InsuficientsFundsEmbed(interaction, balance, amount, ecoSymbol);
+        await InsuficientsFundsEmbed(interaction, balance, amount, ecoSymbol, type);
         return true;
     }
     return false;
@@ -53,6 +54,18 @@ export async function isSelfTransfer(
 ) {
     if (userId === targetId) {
         await SameUserEmbed(interaction);
+        return true;
+    }
+    return false;
+}
+
+export async function isBotAction(
+    interaction: ChatInputCommandInteraction,
+    targetId: string,
+) {
+    const targetUser = await interaction.client.users.fetch(targetId)
+    if (targetUser.bot) {
+        await botTargetEmbed(interaction);
         return true;
     }
     return false;

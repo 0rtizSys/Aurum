@@ -4,7 +4,7 @@ import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandIn
 import { checkCooldown, setCooldown, }
   from "../../../services/database/tables/cooldowns/cd_manager";
 
-import { addBalanceBW }
+import { addBalance }
   from "../../../services/database/tables/clients/manager";
 
 import { getCdTime }
@@ -61,7 +61,7 @@ export const workCommand: Command = {
       flags: !isPublic ? MessageFlags.Ephemeral : undefined,
     });
     try {
-      await addBalanceBW(userId, guildId, "wallet", ranGains);
+      await addBalance(userId, guildId, "wallet", ranGains);
       await setCooldown(guildId, userId, cdTime * 1000);
       await sendSimpleEmbed(interaction, {
         title: '💼 Work',

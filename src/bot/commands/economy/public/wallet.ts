@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandInteraction, MessageFlags }
   from "discord.js";
-import { getBalanceBW }
+import { getBalance }
   from "../../../services/database/tables/clients/manager";
 
 import { internalErrorEmbed, sendSimpleEmbed }
@@ -36,7 +36,7 @@ export const getWalletBalance: Command = {
     await interaction.deferReply({ flags: !isPublic ? MessageFlags.Ephemeral : undefined }); //^ Here we defer the message
     try {
       const symbol = await getEcoSymbol(guildId);
-      const userBal = await getBalanceBW(userId, guildId, "wallet");
+      const userBal = await getBalance(userId, guildId, "wallet");
       await sendSimpleEmbed(interaction, {
         title: "Wallet Balance 💵",
         description: isPublic

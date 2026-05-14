@@ -94,11 +94,12 @@ export async function InsuficientsFundsEmbed(
   currentBalance: number,
   currentAmount: number,
   symbol: string,
+  type: "transfer" | "withdraw"
 ) {
   const embed = new EmbedBuilder()
     .setColor(embColor)
     .setTitle('✖️ Insufficient funds')
-    .setDescription(`Current balance: \`${symbol}${currentBalance}\` \nAmount to transfer: \`${symbol}${currentAmount}\``)
+    .setDescription(`Current balance: \`${symbol} ${currentBalance}\` \nAmount to ${type}: \`${symbol} ${currentAmount}\``)
     .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
   else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
@@ -112,7 +113,7 @@ export async function SameUserEmbed(interaction:ChatInputCommandInteraction) {
   const embed = new EmbedBuilder()
     .setColor(embColor)
     .setTitle('✖️ Error')
-    .setDescription(`Aurum: Ops, you cant transfer yourself balance!`)
+    .setDescription(`Aurum: Oops, you cant transfer yourself balance!`)
     .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
   else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
@@ -126,7 +127,7 @@ export async function botTargetEmbed(interaction:ChatInputCommandInteraction) {
   const embed = new EmbedBuilder()
     .setColor(embColor)
     .setTitle('✖️ Error')
-    .setDescription(`Aurum: Ops, you cant transfer yourself balance!`)
+    .setDescription(`Aurum: Oops, you cant transfer balance to a bot!`)
     .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
   else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }

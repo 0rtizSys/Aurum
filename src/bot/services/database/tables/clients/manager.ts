@@ -3,7 +3,7 @@ import { pool } from "../../db";
 
 //^ Get Balance Wallet Function
 
-export async function getBalanceBW(
+export async function getBalance(
   userId: string,
   guildId: string,
   Type: "wallet" | "bank"
@@ -27,7 +27,7 @@ export async function getBalanceBW(
 
 //^ Add Balance ( Prototype )
 
-export async function addBalanceBW(
+export async function addBalance(
   userId: string,
   guildId: string,
   Type: "wallet" | "bank",
@@ -40,6 +40,25 @@ export async function addBalanceBW(
   VALUES ($1, $2, $3)
   ON CONFLICT (user_id, guild_id)
   DO UPDATE SET ${Type} = clients.${Type} + $3
+  RETURNING ${Type};
+  `
+  const result = await pool.query(query, [userId, guildId, amn]);
+  return result.rows[0][Type];
+}
+
+export async function removeBalance(
+  userId: string,
+  guildId: string,
+  Type: "wallet" | "bank",
+  amn: number,
+) {
+  if (!["wallet", "bank"].includes(Type)) throw new Error("Invalid balance type")
+  const query =
+    `
+  INSERT INTO clients (user_id, guild_id, ${Type})
+  VALUES ($1, $2, $3)
+  ON CONFLICT (user_id, guild_id)
+  DO UPDATE SET ${Type} = clients.${Type} - $3
   RETURNING ${Type};
   `
   const result = await pool.query(query, [userId, guildId, amn]);

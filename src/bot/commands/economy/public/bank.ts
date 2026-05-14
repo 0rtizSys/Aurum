@@ -4,7 +4,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags }
 import { sendSimpleEmbed, internalErrorEmbed }
   from "../../../Helpers/simplified_embed_builder";
 
-import { getBalanceBW }
+import { getBalance }
   from "../../../services/database/tables/clients/manager";
 
 import { requireGuild }
@@ -34,7 +34,7 @@ export const getBankBalance: Command = {
     const symbol = await getEcoSymbol(guildId);
     await interaction.deferReply({ flags: !isPublic ? MessageFlags.Ephemeral : undefined });
     try {
-      const userBal = await getBalanceBW(userId, guildId, "bank");
+      const userBal = await getBalance(userId, guildId, "bank");
       await sendSimpleEmbed(interaction, {
         title: "Bank balance 💳",
         description: isPublic

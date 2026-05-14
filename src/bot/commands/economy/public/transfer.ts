@@ -7,7 +7,7 @@ import { requireGuild }
 import { Command }
     from "../../types";
 
-import { isInvalidAmount, hasEnoughBalance, isSelfTransfer }
+import { isInvalidAmount, hasInsufficientBalance, isSelfTransfer }
     from "../../../Helpers/validators";
 
 import { internalErrorEmbed, transactionWentWrong }
@@ -53,7 +53,7 @@ export const transferCommand: Command = {
             const symbol = await getEcoSymbol(guildId);
             if (await isSelfTransfer(interaction, userId, targetId)) return;
             if (await isInvalidAmount(interaction, amount)) return;
-            if (!(await hasEnoughBalance(interaction, userId, guildId, amount, symbol))) return;
+            if (!(await hasInsufficientBalance(interaction, userId, guildId, amount, symbol, "transfer"))) return;
             const isAnyError = await transferSafe(userId, targetId, guildId, amount);
             if (isAnyError) {
                 return await transactionWentWrong(interaction);
