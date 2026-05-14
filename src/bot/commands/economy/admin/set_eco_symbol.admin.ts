@@ -2,6 +2,7 @@ import {
   SlashCommandBuilder,
   SlashCommandOptionsOnlyBuilder,
   ChatInputCommandInteraction,
+  PermissionFlagsBits,
 }
   from "discord.js";
 
@@ -11,7 +12,7 @@ import { requireGuild }
 import { getEcoSymbol }
   from "../../../services/database/tables/servers/get_eco_symbol";
 
-import { sendSimpleEmbed, internalErrorEmbed }
+import { sendSimpleEmbed, internalErrorEmbed, notEnoughPermsEmbed }
   from "../../../Helpers/simplified_embed_builder";
 
 import { setEcoSymbol }
@@ -38,6 +39,9 @@ export const setEconomySymbolAdmin: Command = {
     const guildId = interaction.guild!.id;
     const newSymbol = interaction.options.getString("symbol", true);
     const oldSymbol = await getEcoSymbol(guildId);
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+          await notEnoughPermsEmbed(interaction);
+        }
     if (newSymbol.length > 2 || newSymbol.length === 0) {
       await sendSimpleEmbed(interaction, {
         title: "✖️ Error",

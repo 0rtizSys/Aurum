@@ -41,7 +41,7 @@ export const workCommand: Command = {
     ),
 
   async execute(interaction: ChatInputCommandInteraction) {
-    if (!requireGuild(interaction)) return;
+    if (!(await requireGuild(interaction))) return;
     const ranGains = randomValues(TEMP_MIN, TEMP_MAX);
     const guildId = interaction.guild!.id;
     const userId = interaction.user.id;

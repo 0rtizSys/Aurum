@@ -4,7 +4,7 @@ import { SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, ChatInputCommandIn
 import { addBalance }
   from "../../../services/database/tables/clients/manager";
 
-import { sendSimpleEmbed, internalErrorEmbed }
+import { sendSimpleEmbed, internalErrorEmbed, notEnoughPermsEmbed }
   from "../../../Helpers/simplified_embed_builder";
 
 import { requireGuild } from "../../../Helpers/require_guild";
@@ -48,7 +48,7 @@ export const addBalanceCommand: Command = {
     ),
 
   async execute(interaction: ChatInputCommandInteraction) {
-    if (!(requireGuild(interaction))) return;
+    if (!(await requireGuild(interaction))) return;
     type typeMethod = "wallet" | "bank";
     const maxAmount = 1_000_000_000;
     const method = interaction.options.getString("method", true) as typeMethod;
@@ -77,12 +77,7 @@ export const addBalanceCommand: Command = {
       return;
     }
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
-      await sendSimpleEmbed(interaction, {
-        title: '✖️ Error',
-        description: 'You dont have enough perms to do that! 😥',
-        thumType: 'error'
-      })
-      return;
+      await notEnoughPermsEmbed(interaction);
     }
     //? Defering the message after validating
     await interaction.deferReply({ flags: isPublic ? undefined : MessageFlags.Ephemeral, });

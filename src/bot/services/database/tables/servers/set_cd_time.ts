@@ -11,7 +11,9 @@ export async function setCdTime(guildId: string, seconds: number) {
             `,
       [guildId, seconds],
     );
+    return false;
   } catch (err) {
     console.error(`Error de base de datos\narchivo: set_cd_time.ts\n${err}`);
+    return true;
   }
 }
