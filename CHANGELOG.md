@@ -1,17 +1,21 @@
 # Changelog
 
+## [1.7.3] - 2026-05-14
+### 🐛 Logic bugs fixed
+- Fixed `/transfer` returning `Transaction went wrong` unexpectedly
+
 ## [1.7.2] - 2026-05-14
 
-## ♻️ changes
+### ♻️ changes
 - Changed `addNumberOption` to `addIntegerOption` in `withdraw.ts:26`
 - Deleted intent `MessageContent` on `index.ts`
 
-## 🔒 Security vulnerabilities fixed
+### 🔒 Security vulnerabilities fixed
 - Added permission validator on `set_eco_symbol.ts`
 - Added atomic transactions to `withdraw` via `withdraw-transfer.ts` and `transferInternalSafe`
 
 
-## 🐛 Logic bugs fixed
+### 🐛 Logic bugs fixed
 - Added `await` to `work.ts:44`
 - Added `await` to `withdraw.ts:37`
 - Added `await` to `add_balance.ts:51`

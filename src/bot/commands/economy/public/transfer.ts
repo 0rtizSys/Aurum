@@ -54,7 +54,7 @@ export const transferCommand: Command = {
             if (await isSelfTransfer(interaction, userId, targetId)) return;
             if (await isBotAction(interaction, targetId)) return;
             if (await isInvalidAmount(interaction, amount)) return;
-            if (!(await hasInsufficientBalance(interaction, userId, guildId, amount, symbol, "transfer"))) return;
+            if (await hasInsufficientBalance(interaction, userId, guildId, amount, symbol, "transfer")) return;
             const isAnyError = await transferSafe(userId, targetId, guildId, amount);
             if (isAnyError) {
                 return await transactionWentWrong(interaction);
