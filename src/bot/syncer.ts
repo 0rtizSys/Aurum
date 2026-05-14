@@ -18,12 +18,13 @@ import { getWalletBalance } from "./commands/economy/public/wallet.js";
 import { workCommand } from "./commands/economy/public/work.js";
 import { getBankBalance } from "./commands/economy/public/bank.js";
 import { transferCommand } from "./commands/economy/public/transfer.js";
+import { withdrawCommand } from "./commands/economy/public/withdraw.js";
 
 // * =========================
 // * Economy - Moderators
 // * =========================
 
-import { addBalance } from "./commands/economy/moderators/add_balance.js";
+import { addBalanceCommand } from "./commands/economy/moderators/add_balance.js";
 
 // * =========================
 // * Economy - Admin
@@ -48,9 +49,10 @@ export const cmds = [
   workCommand,
   getBankBalance,
   transferCommand,
+  withdrawCommand,
 
   // * Economy - Moderators
-  addBalance,
+  addBalanceCommand,
 
   // * Economy - Admin
   setCdTimeAdmin,
