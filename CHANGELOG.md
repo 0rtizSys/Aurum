@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.7.2] - 2026-05-14
+
+## ♻️ changes
+- Changed `addNumberOption` to `addIntegerOption` in `withdraw.ts:26`
+- Deleted intent `MessageContent` on `index.ts`
+
+## 🔒 Security vulnerabilities fixed
+- Added permission validator on `set_eco_symbol.ts`
+- Added atomic transactions to `withdraw` via `withdraw-transfer.ts` and `transferInternalSafe`
+
+
+## 🐛 Logic bugs fixed
+- Added `await` to `work.ts:44`
+- Added `await` to `withdraw.ts:37`
+- Added `await` to `add_balance.ts:51`
+- Added `return` in if statement `set_cd_time.admin.ts:32`
+- Added `await` on all else statements on `simplified_embed_builder.ts`
+- Added `isBotAction()` function to `transfer.ts:55`
+- Fixed `setCdTime` not propagating database errors to caller
+
 ## [1.7.1] - 2026-05-13
 - Updated `README.md`
 - Added `DATABASE_SCHEMA.md`
@@ -9,7 +29,7 @@
 - Added `withdraw.ts`
 - Added new parameter `type` with options `transfer / withdraw` on `hasInsufficientBalance()` function
 
-### 📝 Changes 
+### ♻️ Changes 
 - Renamed `hasEnoughBalance()` function to `hasInsufficientBalance()`
 - Renamed `addBalanceBW()` function to `addBalance()`
 - Renamed `getBalanceBW()` function to `getBalance()`

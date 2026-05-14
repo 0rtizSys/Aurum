@@ -59,6 +59,7 @@ export async function removeBalance(
   VALUES ($1, $2, $3)
   ON CONFLICT (user_id, guild_id)
   DO UPDATE SET ${Type} = clients.${Type} - $3
+  WHERE clients.${Type} >= $3
   RETURNING ${Type};
   `
   const result = await pool.query(query, [userId, guildId, amn]);

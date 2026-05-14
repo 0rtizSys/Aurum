@@ -37,7 +37,7 @@ export async function internalErrorEmbed(interaction: ChatInputCommandInteractio
     .setThumbnail(errorIcon)
 
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
-  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+  else { await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }
 
 //?---------------------------------
@@ -53,7 +53,7 @@ export async function notEnoughPermsEmbed(interaction: ChatInputCommandInteracti
     .setThumbnail(errorIcon)
 
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
-  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+  else { await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }
 
 //?-----------------------------------
@@ -68,7 +68,7 @@ export async function amountErrorEmbed(interaction: ChatInputCommandInteraction)
     .setThumbnail(errorIcon)
 
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
-  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+  else { await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }
 
 //?-------------------------
@@ -82,7 +82,7 @@ export async function transactionWentWrong(interaction: ChatInputCommandInteract
     .setDescription('An unexpected error occurred while processing your request.\nPlease try again in a moment 💡')
     .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
-  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+  else { await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }
 
 //?--------------------
@@ -102,7 +102,7 @@ export async function InsuficientsFundsEmbed(
     .setDescription(`Current balance: \`${symbol} ${currentBalance}\` \nAmount to ${type}: \`${symbol} ${currentAmount}\``)
     .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
-  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+  else { await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }
 
 //?------------------
@@ -116,7 +116,7 @@ export async function SameUserEmbed(interaction:ChatInputCommandInteraction) {
     .setDescription(`Aurum: Oops, you cant transfer yourself balance!`)
     .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
-  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+  else { await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }
 
 //?-------------------
@@ -130,5 +130,5 @@ export async function botTargetEmbed(interaction:ChatInputCommandInteraction) {
     .setDescription(`Aurum: Oops, you cant transfer balance to a bot!`)
     .setThumbnail(errorIcon)
   if (interaction.deferred || interaction.replied) { await interaction.editReply({ embeds: [embed] }) }
-  else { interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
+  else { await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }) }
 }

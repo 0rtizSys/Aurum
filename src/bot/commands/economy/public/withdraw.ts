@@ -16,14 +16,14 @@ import { getEcoSymbol }
 import { internalErrorEmbed, sendSimpleEmbed }
     from "../../../Helpers/simplified_embed_builder";
 
-import { addBalance, removeBalance }
-    from "../../../services/database/tables/clients/manager";
+import { transferInternalSafe }
+from "../../../services/database/tables/clients/withdraw-transfer";
 
 export const withdrawCommand: Command = {
     data: new SlashCommandBuilder()
         .setName('withdraw')
         .setDescription('Withdraw money from your bank')
-        .addNumberOption(opt => opt
+        .addIntegerOption(opt => opt
             .setName('amount')
             .setDescription('Amount to withdraw')
             .setRequired(true)
@@ -34,9 +34,9 @@ export const withdrawCommand: Command = {
         ),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        if (!(requireGuild(interaction))) return;
+        if (!(await requireGuild(interaction))) return;
         const isPublic = interaction.options.getBoolean('visibility') ?? false;
-        const amount = interaction.options.getNumber('amount', true);
+        const amount = interaction.options.getInteger('amount', true);
         const userId = interaction.user.id;
         const guildId = interaction.guild!.id;
         const ecoSymbol = await getEcoSymbol(guildId)
@@ -44,8 +44,7 @@ export const withdrawCommand: Command = {
             if (await isInvalidAmount(interaction, amount)) return;
             if (await hasInsufficientBalance(interaction, userId, guildId, amount, ecoSymbol, "withdraw")) return;
             await interaction.deferReply({ flags: !isPublic ? MessageFlags.Ephemeral : undefined });
-            await removeBalance(userId, guildId, "bank", amount)
-            await addBalance(userId, guildId, "wallet", amount)
+            await transferInternalSafe(userId, guildId, amount, "bank", "wallet");
             await sendSimpleEmbed(interaction, {
                 title: "Withdrawal completed ✅ ",
                 description: isPublic

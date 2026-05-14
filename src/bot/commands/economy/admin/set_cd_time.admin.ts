@@ -29,7 +29,7 @@ export const setCdTimeAdmin: Command = {
         .setRequired(true),
     ),
   async execute(interaction: ChatInputCommandInteraction) {
-    if (!(await requireGuild(interaction))) { };
+    if (!(await requireGuild(interaction))) return;
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) { await notEnoughPermsEmbed(interaction); return; };
     const guildId = interaction.guild!.id;
     const newTime = interaction.options.getInteger("time", true);
@@ -45,7 +45,7 @@ export const setCdTimeAdmin: Command = {
     }
     await interaction.deferReply();
     try {
-      await setCdTime(guildId, newTime);
+      if(await setCdTime(guildId, newTime)) throw new Error('Failure on function setCdTime');
       await sendSimpleEmbed(interaction, {
         title: '⚙️ Configurations saved',
         description: `Old cooldown time: \`${oldTime}s\`\nNew cooldown time: \`${newTime}s\``,
