@@ -19,6 +19,7 @@ import { workCommand } from "./commands/economy/public/work.js";
 import { getBankBalance } from "./commands/economy/public/bank.js";
 import { transferCommand } from "./commands/economy/public/transfer.js";
 import { withdrawCommand } from "./commands/economy/public/withdraw.js";
+import { depositCommand } from "./commands/economy/public/deposit.js";
 
 // * =========================
 // * Economy - Moderators
@@ -50,6 +51,7 @@ export const cmds = [
   getBankBalance,
   transferCommand,
   withdrawCommand,
+  depositCommand,
 
   // * Economy - Moderators
   addBalanceCommand,

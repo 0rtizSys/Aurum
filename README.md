@@ -39,6 +39,12 @@ It is designed around a simple server-based economy: users can work for money, c
     - `amount`
     - `visibility` (optional)
 
+- `/deposit`
+  - Deposits an amount from `wallet` into `bank`.
+  - Options:
+    - `amount`
+    - `visibility` (optional)
+
 - `/transfer`
   - Transfers `bank` balance to another user (ACID transaction).
   - Options:

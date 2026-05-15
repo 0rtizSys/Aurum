@@ -7,16 +7,24 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsc --watch",
-    "compile": "npx tsc && node dist/bot/index.js"
+    "compile": "npx tsc && node dist/bot/index.js",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.6.0",
     "@types/pg": "^8.20.0",
     "eslint": "^10.2.1",
     "globals": "^17.5.0",
+    "jest": "^30.4.2",
     "prettier": "^3.8.3",
+    "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.58.2"
