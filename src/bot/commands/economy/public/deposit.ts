@@ -19,10 +19,10 @@ import { internalErrorEmbed, sendSimpleEmbed, transactionWentWrong }
 import { transferInternalSafe }
 from "../../../services/database/tables/clients/withdraw-transfer";
 
-export const withdrawCommand: Command = {
+export const depositCommand: Command = {
     data: new SlashCommandBuilder()
-        .setName('withdraw')
-        .setDescription('Withdraw money from your bank')
+        .setName('deposit')
+        .setDescription('Deposit money to your bank')
         .addIntegerOption(opt => opt
             .setName('amount')
             .setDescription('Amount to withdraw')
@@ -30,7 +30,7 @@ export const withdrawCommand: Command = {
         )
         .addBooleanOption(opt => opt
             .setName('visibility')
-            .setDescription('Other people can see how much money you withdraw')
+            .setDescription('Other people can see how much money you deposit')
         ),
 
     async execute(interaction: ChatInputCommandInteraction) {
@@ -42,17 +42,17 @@ export const withdrawCommand: Command = {
         const ecoSymbol = await getEcoSymbol(guildId)
         try {
             if (await isInvalidAmount(interaction, amount)) return;
-            if (await hasInsufficientBalance(interaction, userId, guildId, amount, ecoSymbol, "checkBank", "withdraw")) return;
+            if (await hasInsufficientBalance(interaction, userId, guildId, amount, ecoSymbol, "checkWallet", "deposit")) return;
             await interaction.deferReply({ flags: !isPublic ? MessageFlags.Ephemeral : undefined });
-            const isAnyError = await transferInternalSafe(userId, guildId, amount, "bank", "wallet");
+            const isAnyError = await transferInternalSafe(userId, guildId, amount, "wallet", "bank");
             if (isAnyError) {
                 return await transactionWentWrong(interaction);
             }
             await sendSimpleEmbed(interaction, {
-                title: "Withdrawal completed ✅ ",
+                title: "Deposit completed ✅ ",
                 description: isPublic
-                ? `Successfully withdrawn \`${ecoSymbol} ${amount}\` from your bank account`
-                : `${interaction.user} You have successfully withdrawn \`${ecoSymbol} ${amount}\` from your bank account`
+                ? `Successfully deposit \`${ecoSymbol} ${amount}\` from your wallet`
+                : `${interaction.user} You have successfully deposit \`${ecoSymbol} ${amount}\` from your wallet`
             })
 
         } catch (e) {

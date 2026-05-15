@@ -36,11 +36,16 @@ export async function hasInsufficientBalance(
     guildId: string,
     amount: number,
     ecoSymbol: string,
-    type: "transfer" | "withdraw"
+    type: "checkBank" | "checkWallet",
+    action: "deposit" | "withdraw" | "transfer"
 ) {
-    const balance = await getBalance(userId, guildId, "bank")
+    if(!["checkBank", "checkWallet"].includes(type)) throw new Error("Invalid action type");
+    const balance = type === "checkWallet" 
+    ? await getBalance(userId, guildId, "wallet")
+    : await getBalance(userId, guildId, "bank");
+
     if (balance < amount) {
-        await InsuficientsFundsEmbed(interaction, balance, amount, ecoSymbol, type);
+        await InsuficientsFundsEmbed(interaction, balance, amount, ecoSymbol, action);
         return true;
     }
     return false;
@@ -69,4 +74,12 @@ export async function isBotAction(
         return true;
     }
     return false;
+}
+
+// test
+
+export function validateAmount(amount: number): boolean {
+  const input = { UntAmount: amount };
+  const data = UntrustedData.safeParse(input);
+  return data.success;
 }
