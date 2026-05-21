@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.9.0] - 2026-05-14
+- Added `coinflip.ts`
+
 ## [1.8.0] - 2026-05-14
 - Added `deposit.ts`
 - Added `action` parameter to `hasInsufficientBalance()` with values `deposit`, `withdraw` and `transfer` on `validator.ts:40`

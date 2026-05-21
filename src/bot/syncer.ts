@@ -22,6 +22,12 @@ import { withdrawCommand } from "./commands/economy/public/withdraw.js";
 import { depositCommand } from "./commands/economy/public/deposit.js";
 
 // * =========================
+// * Games
+// * =========================
+
+import { coinFlipCommand } from "./commands/games/coin_flip.js";
+
+// * =========================
 // * Economy - Moderators
 // * =========================
 
@@ -52,6 +58,9 @@ export const cmds = [
   transferCommand,
   withdrawCommand,
   depositCommand,
+
+  // * Games
+  coinFlipCommand,
 
   // * Economy - Moderators
   addBalanceCommand,
