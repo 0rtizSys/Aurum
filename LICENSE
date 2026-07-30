@@ -1,0 +1,24 @@
+Private Modification and Limited Commercial Royalty License (PMCLRL)
+
+Version 1.1
+
+Copyright (c) [Year] [Author / Owner Name]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to download, store locally, fork, modify, review, audit, and analyze the source code exclusively for personal, internal, or direct collaborative use with the owner, subject to the following conditions:
+1. Strict Prohibition of Public Distribution
+
+The redistribution, publication, sublicensing, transfer, sale, or making available of the Software—whether in its original source code, compiled, modified, fragmented, or as part of any derivative work—to any third party, via public networks, public or private code repositories accessible to the general public, shared servers, or any other mass distribution medium, is strictly prohibited. Any modifications and forks made by the user must remain strictly private.
+2. Rights of Review, Support, and Feedback
+
+Users are expressly permitted to examine the code, run local diagnostic tests, propose optimizations, report bugs directly to the original author via private feedback, and provide technical support or constructive opinions regarding the Software's architecture.
+3. Commercial Use Restriction and Royalty Authorization (5%)
+
+In the event that the owner grants such commercial authorization in writing:
+
+    The commercial operator shall be obligated to pay the original owner a fixed royalty of 5% (five percent) of the gross value of each sale, transaction, or financial consideration generated directly by the product, service, or system integrating the Software (for example, if the final product is sold for 500 currency units, the owner shall receive 25 currency units corresponding to that percentage).
+
+    The reporting terms and payment schedules for this 5% will be contractually agreed upon at the time commercial use is approved.
+
+4. Disclaimer of Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

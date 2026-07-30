@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.10.0] - 2026-06-30
+- Added `LICENCE`
+
 ## [1.9.0] - 2026-05-14
 - Added `coinflip.ts`
 
