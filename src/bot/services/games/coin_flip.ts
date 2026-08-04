@@ -1,6 +1,6 @@
 import { randomInt } from "crypto";
 
-export const coinSides = ["cara", "cruz"] as const;
+export const coinSides = ["heads", "tails"] as const;
 
 export type CoinSide = (typeof coinSides)[number];
 

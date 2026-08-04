@@ -15,7 +15,7 @@ import { CoinSide, isCoinSide, settleCoinFlip } from "../../services/games/coin_
 const DEFAULT_BET = 50;
 
 function formatSide(side: CoinSide): string {
-    return side === "cara" ? "Cara" : "Cruz";
+    return side === "heads" ? "Heads" : "Tails";
 }
 
 function formatSignedAmount(amount: number, won: boolean, symbol: string): string {
@@ -31,8 +31,8 @@ export const coinFlipCommand: Command = {
             .setDescription('Choose one side of the coin')
             .setRequired(true)
             .addChoices(
-                { name: 'Cara', value: 'cara' },
-                { name: 'Cruz', value: 'cruz' }
+                { name: 'Heads', value: 'heads' },
+                { name: 'Tails', value: 'tails' }
             )
         )
         .addIntegerOption(opt => opt
@@ -57,7 +57,7 @@ export const coinFlipCommand: Command = {
         if (!isCoinSide(choiceOption)) {
             await sendSimpleEmbed(interaction, {
                 title: "✖️ Invalid coin side",
-                description: "Choose `Cara` or `Cruz` to play coinflip.",
+                description: "Choose `Heads` or `Tails` to play coinflip.",
                 thumType: "error",
                 eph: true,
             });

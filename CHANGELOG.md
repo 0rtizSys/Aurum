@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1] - 2026-060-30
+- Added `DATABASE_URL` on `env.example` to connect your database to Supabase
+
+### ♻️ changes
+- Changed PostgreSQL connection to use a Supabase connection string in `src/bot/services/database/db.ts`
+- Changed `coinflip` game language to `EN`
+
 ## [1.10.0] - 2026-06-30
 - Added `LICENCE`
 
