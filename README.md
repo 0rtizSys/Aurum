@@ -12,6 +12,7 @@ It is designed around a simple server-based economy: users can work for money, c
 - Server configuration for:
   - economy symbol
   - work cooldown time
+- Transactional server cooldown updates that shorten active `/work` cooldowns only when they exceed the new configured time.
 - Shared embed helpers for consistent bot responses.
 - Internal slash command sync command for development and deployment (guild-only).
 
@@ -65,7 +66,8 @@ It is designed around a simple server-based economy: users can work for money, c
 
 - `/set_cooldown_time`
   - Changes the cooldown time used by `/work`.
-  - Value is set in seconds.
+  - Value is set in positive integer seconds.
+  - Existing active cooldowns longer than the new value are shortened for that server.
   - Requires Administrator permission.
 
 - `/set_economy_symbol`
@@ -173,6 +175,10 @@ src/
     Helpers/
     services/
       database/
+        repository/
+          servers/
+            set_cd_time.ts
+            scdt.test.ts
         tables/
     index.ts
     syncer.ts
@@ -202,6 +208,7 @@ Economy behavior is scoped by guild:
 - balances are stored per user and per guild
 - cooldowns are stored per user and per guild
 - economy symbol and cooldown time are stored per guild
+- cooldown time changes run in a database transaction and roll back on failure
 
 ## Scripts
 
@@ -226,13 +233,14 @@ Notes:
 - discord.js v14
 - PostgreSQL
 - dotenv
+- Jest
 - Prettier
 - zod
 
 ## Current Limitations
 
 - No migration or schema bootstrap files are included.
-- No automated test suite is present.
+- Automated test coverage is still incremental.
 - Some command validations and permission checks could still be tightened in code.
 
 ## Changelog

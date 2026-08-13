@@ -45,27 +45,27 @@ import { setEconomySymbolAdmin } from "./commands/economy/admin/set_eco_symbol.a
 // ! =========================
 
 export const cmds = [
-  // ? Utils
-  pingSlash,
+    // ? Utils
+    pingSlash,
 
-  // ! Development
-  syncSlash,
+    // ! Development
+    syncSlash,
 
-  // * Economy - Public
-  getWalletBalance,
-  workCommand,
-  getBankBalance,
-  transferCommand,
-  withdrawCommand,
-  depositCommand,
+    // * Economy - Public
+    getWalletBalance,
+    workCommand,
+    getBankBalance,
+    transferCommand,
+    withdrawCommand,
+    depositCommand,
 
-  // * Games
-  coinFlipCommand,
+    // * Games
+    coinFlipCommand,
 
-  // * Economy - Moderators
-  addBalanceCommand,
+    // * Economy - Moderators
+    addBalanceCommand,
 
-  // * Economy - Admin
-  setCdTimeAdmin,
-  setEconomySymbolAdmin,
+    // * Economy - Admin
+    setCdTimeAdmin,
+    setEconomySymbolAdmin,
 ];

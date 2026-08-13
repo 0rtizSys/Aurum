@@ -7,10 +7,17 @@ import {
 import { Command } from "../types";
 import { requireGuild } from "../../Helpers/require_guild";
 import { isInvalidAmount } from "../../Helpers/validators";
-import { internalErrorEmbed, sendSimpleEmbed } from "../../Helpers/simplified_embed_builder";
-import { getEcoSymbol } from "../../services/database/tables/servers/get_eco_symbol";
-import { applyWalletWager } from "../../services/database/tables/clients/wager";
-import { CoinSide, isCoinSide, settleCoinFlip } from "../../services/games/coin_flip";
+import {
+    internalErrorEmbed,
+    sendSimpleEmbed,
+} from "../../Helpers/simplified_embed_builder";
+import { getEcoSymbol } from "../../services/database/repository/servers/get_eco_symbol";
+import { applyWalletWager } from "../../services/database/repository/clients/wager";
+import {
+    CoinSide,
+    isCoinSide,
+    settleCoinFlip,
+} from "../../services/games/coin_flip";
 
 const DEFAULT_BET = 50;
 
@@ -18,31 +25,40 @@ function formatSide(side: CoinSide): string {
     return side === "heads" ? "Heads" : "Tails";
 }
 
-function formatSignedAmount(amount: number, won: boolean, symbol: string): string {
+function formatSignedAmount(
+    amount: number,
+    won: boolean,
+    symbol: string,
+): string {
     return `${won ? "+" : "-"}${symbol}${amount}`;
 }
 
 export const coinFlipCommand: Command = {
     data: new SlashCommandBuilder()
-        .setName('coinflip')
-        .setDescription('Bet wallet money by flipping a coin')
-        .addStringOption(opt => opt
-            .setName('choice')
-            .setDescription('Choose one side of the coin')
-            .setRequired(true)
-            .addChoices(
-                { name: 'Heads', value: 'heads' },
-                { name: 'Tails', value: 'tails' }
-            )
+        .setName("coinflip")
+        .setDescription("Bet wallet money by flipping a coin")
+        .addStringOption((opt) =>
+            opt
+                .setName("choice")
+                .setDescription("Choose one side of the coin")
+                .setRequired(true)
+                .addChoices(
+                    { name: "Heads", value: "heads" },
+                    { name: "Tails", value: "tails" },
+                ),
         )
-        .addIntegerOption(opt => opt
-            .setName('amount')
-            .setDescription(`Amount to bet from your wallet (default ${DEFAULT_BET})`)
-            .setMinValue(1)
+        .addIntegerOption((opt) =>
+            opt
+                .setName("amount")
+                .setDescription(
+                    `Amount to bet from your wallet (default ${DEFAULT_BET})`,
+                )
+                .setMinValue(1),
         )
-        .addBooleanOption(opt => opt
-            .setName("visibility")
-            .setDescription("Other people can see your flip")
+        .addBooleanOption((opt) =>
+            opt
+                .setName("visibility")
+                .setDescription("Other people can see your flip"),
         ),
 
     async execute(interaction: ChatInputCommandInteraction) {
@@ -50,8 +66,8 @@ export const coinFlipCommand: Command = {
 
         const guildId = interaction.guild!.id;
         const userId = interaction.user.id;
-        const choiceOption = interaction.options.getString('choice', true);
-        const amount = interaction.options.getInteger('amount') ?? DEFAULT_BET;
+        const choiceOption = interaction.options.getString("choice", true);
+        const amount = interaction.options.getInteger("amount") ?? DEFAULT_BET;
         const isPublic = interaction.options.getBoolean("visibility") ?? false;
 
         if (!isCoinSide(choiceOption)) {

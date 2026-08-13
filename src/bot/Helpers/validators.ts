@@ -1,8 +1,12 @@
 import { ChatInputCommandInteraction } from "discord.js";
-import { amountErrorEmbed, botTargetEmbed, SameUserEmbed } from "./simplified_embed_builder";
-import { getBalance } from "../services/database/tables/clients/manager";
+import {
+    amountErrorEmbed,
+    botTargetEmbed,
+    SameUserEmbed,
+} from "./simplified_embed_builder";
+import { getBalance } from "../services/database/repository/clients/manager";
 import { InsuficientsFundsEmbed } from "./simplified_embed_builder";
-import z from 'zod';
+import z from "zod";
 
 //? ------------------------
 //? SCHEMAS AND DEFINITIONS
@@ -10,8 +14,7 @@ import z from 'zod';
 
 const UntrustedData = z.object({
     UntAmount: z.number().min(1).max(1_000_000_000),
-})
-
+});
 
 //? ---------------------
 //? EXPORTABLE FUNCTIONS
@@ -19,10 +22,10 @@ const UntrustedData = z.object({
 
 export async function isInvalidAmount(
     interaction: ChatInputCommandInteraction,
-    amount: number
+    amount: number,
 ): Promise<boolean> {
-    const input = { UntAmount: amount }
-    const data = UntrustedData.safeParse(input)
+    const input = { UntAmount: amount };
+    const data = UntrustedData.safeParse(input);
     if (data.success !== true) {
         await amountErrorEmbed(interaction);
         return true;
@@ -37,20 +40,27 @@ export async function hasInsufficientBalance(
     amount: number,
     ecoSymbol: string,
     type: "checkBank" | "checkWallet",
-    action: "deposit" | "withdraw" | "transfer"
+    action: "deposit" | "withdraw" | "transfer",
 ) {
-    if(!["checkBank", "checkWallet"].includes(type)) throw new Error("Invalid action type");
-    const balance = type === "checkWallet" 
-    ? await getBalance(userId, guildId, "wallet")
-    : await getBalance(userId, guildId, "bank");
+    if (!["checkBank", "checkWallet"].includes(type))
+        throw new Error("Invalid action type");
+    const balance =
+        type === "checkWallet"
+            ? await getBalance(userId, guildId, "wallet")
+            : await getBalance(userId, guildId, "bank");
 
     if (balance < amount) {
-        await InsuficientsFundsEmbed(interaction, balance, amount, ecoSymbol, action);
+        await InsuficientsFundsEmbed(
+            interaction,
+            balance,
+            amount,
+            ecoSymbol,
+            action,
+        );
         return true;
     }
     return false;
 }
-
 
 export async function isSelfTransfer(
     interaction: ChatInputCommandInteraction,
@@ -68,7 +78,7 @@ export async function isBotAction(
     interaction: ChatInputCommandInteraction,
     targetId: string,
 ) {
-    const targetUser = await interaction.client.users.fetch(targetId)
+    const targetUser = await interaction.client.users.fetch(targetId);
     if (targetUser.bot) {
         await botTargetEmbed(interaction);
         return true;
@@ -79,7 +89,7 @@ export async function isBotAction(
 // test
 
 export function validateAmount(amount: number): boolean {
-  const input = { UntAmount: amount };
-  const data = UntrustedData.safeParse(input);
-  return data.success;
+    const input = { UntAmount: amount };
+    const data = UntrustedData.safeParse(input);
+    return data.success;
 }
