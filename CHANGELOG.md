@@ -1,6 +1,19 @@
 # Changelog
 
-## [1.10.1] - 2026-060-30
+## [1.10.2] - 2026-08-13
+- Updated `README.md`
+
+### ♻️ changes
+- Documented `/set_cooldown_time` cooldown-shortening behavior for active `/work` cooldowns.
+- Changed `setCdTime` to handle database client acquisition failures through the same error return path.
+
+### 🧪 Tests
+- Added `scdt.test.ts` with unit tests for `setCdTime` validation, successful transaction flow, rollback behavior, and connection failures.
+
+### 🐛 Logic bugs fixed
+- Fixed `setCdTime` leaking PostgreSQL connection errors instead of returning `true`.
+
+## [1.10.1] - 2026-06-30
 - Added `DATABASE_URL` on `env.example` to connect your database to Supabase
 
 ### ♻️ changes

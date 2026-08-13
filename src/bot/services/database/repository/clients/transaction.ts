@@ -8,7 +8,7 @@ export async function transferSafe(
 ) {
     const client = await pool.connect();
     try {
-        await client.query('BEGIN');
+        await client.query("BEGIN");
 
         const sender = await client.query(
             `
@@ -17,11 +17,11 @@ export async function transferSafe(
             WHERE user_id=$1 AND guild_id=$2
             FOR UPDATE
             `,
-            [userId, guildId]
+            [userId, guildId],
         );
 
         if (sender.rowCount === 0 || sender.rows[0].bank < amount) {
-            await client.query('ROLLBACK');
+            await client.query("ROLLBACK");
             return true;
         }
 
@@ -29,7 +29,7 @@ export async function transferSafe(
             `UPDATE clients
              SET bank = bank - $1
              WHERE user_id = $2 AND guild_id = $3`,
-            [amount, userId, guildId]
+            [amount, userId, guildId],
         );
 
         await client.query(
@@ -37,19 +37,18 @@ export async function transferSafe(
              VALUES ($1, $2, $3)
              ON CONFLICT (user_id, guild_id)
              DO UPDATE SET bank = clients.bank + EXCLUDED.bank`,
-            [targetId, guildId, amount]
+            [targetId, guildId, amount],
         );
 
-        await client.query('COMMIT');
+        await client.query("COMMIT");
         return false;
     } catch (err) {
-        await client.query('ROLLBACK');
-        console.log(err)
+        await client.query("ROLLBACK");
+        console.log(err);
         return true;
     } finally {
         client.release();
     }
-
 }
 
 /**
